@@ -1,1 +1,11 @@
 <p>product works!</p>
+<table class="table-bordered">
+  <tr *ngFor="let prod of Products">
+    <td>
+      {{prod.id}}
+    </td>
+    <td>
+      {{prod.name}}
+    </td>
+  </tr>
+</table>

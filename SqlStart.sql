@@ -6,8 +6,9 @@ create table PRODUCTS
 (
 	Id int identity(1,1) primary key,
 	ProductName nvarchar(200),
-	ProductCost float,
 );
+
+drop table PRODUCTS;
 
 create table ORDERS
 (
@@ -25,6 +26,8 @@ create table ORDERSPRODUCTS
 	OrdersFK int foreign key references Orders(Id)
 );
 
-insert into ORDERS values ('доставлен','03.09.2020',null);
-
+insert into PRODUCTS values(N'апельсин');
+insert into PRODUCTS values(N'апельсин');
+insert into PRODUCTS values(N'апельсин');
+insert into ORDERS values (N'доставлен','03.09.2020',null);
 select * from ORDERS;
