@@ -21,8 +21,9 @@ export interface Orders {
   id: number;
   ordererName: string;
   orderStatus: string;
+  productCount: number;
   startDate: Date;
   endDate: Date;
-  product: Products;
+  product: Products[];
 
 }
