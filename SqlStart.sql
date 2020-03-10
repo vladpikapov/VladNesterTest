@@ -18,18 +18,41 @@ create table ORDERS
 	Orderer nvarchar(100),
 	OrderStatus nvarchar(10) check(OrderStatus IN(N'Формирование',N'Ожидание доставки',N'Доставлен',N'Доставляется')),
 	StartDate date not null,
-	EndDate date,
+	EndDate date
 );
 
+
+select * from PRODUCTS;
+select * from ORDERS;
+
+select o.Id,o.Orderer,o.OrderStatus,o.StartDate,o.EndDate,count(p.ProductName)  as ProductCount from ORDERS o inner join ORDERSPRODUCTS op
+on o.Id = op.OrdersFK inner join PRODUCTS p on op.ProductFK = p.Id
+group by o.Id,o.Orderer,o.OrderStatus,o.StartDate,o.EndDate;
+
+
+select p.ProductName, p.ProductType, p.Country, count(*) as ProductCount from ORDERS o inner join ORDERSPRODUCTS op
+on o.Id = op.OrdersFK inner join PRODUCTS p on op.ProductFK = p.Id where o.Id = 2
+group by p.ProductName,p.ProductType, p.Country;
+
+
+select o.Id,o.Orderer,o.OrderStatus,o.StartDate,o.EndDate,count(p.ProductName) as ProductCount,p.ProductName,p.ProductType,p.Country from ORDERS o inner join ORDERSPRODUCTS op
+on o.Id = op.OrdersFK inner join PRODUCTS p on op.ProductFK = p.Id
+group by o.Id,p.ProductName,p.ProductType,p.Country,o.Orderer,o.OrderStatus,o.StartDate,o.EndDate;
+
+select * from ORDERS o inner join ORDERSPRODUCTS op
+on o.Id = op.OrdersFK inner join PRODUCTS p on op.ProductFK = p.Id;
+
+insert into ORDERSPRODUCTS values(3,3);
 
 create table ORDERSPRODUCTS
 (
-	ProductFK int foreign key references Products(Id),
-	OrdersFK int foreign key references Orders(Id)
+	
+	OrdersFK int foreign key references Orders(Id),
+	ProductFK int foreign key references Products(Id)
 );
 
-insert into PRODUCTS values(N'Апельсин',N'Еда',N'Египет');
-insert into ORDERS values ('dasdsa',N'Доставлен','03.09.2020',null);
+insert into PRODUCTS values(N'Джинсы',N'Одежда',N'Германия');
+insert into ORDERS values ('dasdsasda',N'Доставлен','03.09.2020',null);
 select * from ORDERS;
 
 drop table ORDERSPRODUCTS;

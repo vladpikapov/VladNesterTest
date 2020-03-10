@@ -7,10 +7,7 @@
       <th>Статус заказа</th>
       <th>Дата отправки</th>
       <th>Дата получения</th>
-      <th>№ товара</th>
-      <th>Название товара</th>
-      <th>Тип товара</th>
-      <th>Страна</th>
+
     </tr>
     <tr *ngFor="let order of Orders">
       <td>{{order.id}}</td>
@@ -19,12 +16,8 @@
       <td>{{order.startDate |date:"dd.MM.yyyy"}}</td>
       <td *ngIf="order.endDate === null">Не получен...</td>
       <td *ngIf="order.endDate != null">{{order.endDate|date:"dd.MM.yyyy"}}</td>
-      <td>{{order.product.id}}</td>
-      <td>{{order.product.name}}</td>
-      <td>{{order.product.type}}</td>
-      <td>{{order.product.country}}</td>
       <td>
-      <button class="btn btn-outline-light">Info</button>
+      <button  class="btn btn-outline-light">Info</button>
       </td>
     </tr>
   </table>
