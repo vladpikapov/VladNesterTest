@@ -20,7 +20,7 @@ namespace VladNesterTest.Controllers
             Configuration = configuration;
         }
         [HttpGet]
-        public List<Product> Print()
+        public List<Product> GetProducts()
         {
             List<Product> products = new List<Product>();
             using (SqlConnection connection = new SqlConnection(Configuration.GetConnectionString("DefaultConnection")))
@@ -32,9 +32,12 @@ namespace VladNesterTest.Controllers
                 {
                     while (reader.Read())
                     {
-                        products.Add(new Product {
+                        products.Add(new Product
+                        {
                             Id = reader.GetInt32(0),
                             Name = reader.GetString(1),
+                            Type = reader.GetString(2),
+                            Country = reader.GetString(3)
                         });
                        
                     }
@@ -43,5 +46,6 @@ namespace VladNesterTest.Controllers
             }
             return products;
         }
+
     }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {Products, ProductService} from '../shared/product.service';
 
 @Component({
   selector: 'app-product',
@@ -8,16 +9,12 @@ import {HttpClient} from '@angular/common/http';
 })
 export class ProductComponent implements OnInit {
 
-  Products: Product[];
-  constructor(private http: HttpClient) {
-    http.get('http://localhost:63170/api/Product').toPromise().then(res => this.Products = res as Product[]);
+  Products: Products[];
+  constructor(private service: ProductService) {
+    service.getProducts().subscribe(res => this.Products = res as Products[], error => console.log(error));
   }
 
   ngOnInit(): void {
   }
 
-}
-export interface Product {
-  id: number;
-  name: string;
 }
