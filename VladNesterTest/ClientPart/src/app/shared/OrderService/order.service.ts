@@ -13,6 +13,10 @@ export class OrderService {
     return this.http.get('http://localhost:63170/api/Order');
   }
 
+  public GetOrder(id: number) {
+    return this.http.get('http://localhost:63170/api/Order/' + id);
+  }
+
 }
 
 
@@ -24,6 +28,11 @@ export interface Orders {
   productCount: number;
   startDate: Date;
   endDate: Date;
-  product: Products[];
+  orderedProducts: OrderedProduct[] ;
 
+}
+
+export  interface OrderedProduct {
+  product: Products;
+  countProduct: number;
 }

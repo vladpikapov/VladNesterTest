@@ -1,11 +1,11 @@
-<p>product works!</p>
-
-<table class="table table-dark table-bordered">
+<div class="row mt-5">
+  <div class="col-8">
+<table class="table table-dark">
   <tr>
     <th>№</th>
-    <th>Название</th>
-    <th>Тип</th>
-    <th>Страна</th>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Country</th>
   </tr>
   <tr *ngFor="let prod of Products">
     <td>
@@ -20,6 +20,54 @@
     <td>
       {{prod.country}}
     </td>
+    <td align="center">
+    <button class="btn btn-outline-light" (click)="DeleteProduct(prod.id)" >Delete</button>
+      </td>
   </tr>
 </table>
+<a  class="btn btn-outline-light" routerLink="/order_list" >Info</a>
+  </div>
 
+  <div class="col-4 border border-dark rounded-sm shadow shadow-sm h-100">
+    <br>
+    <h3 class="mb-1" >Add product</h3>
+    <br>
+  <form class="form-group"  [formGroup]="addForm" (ngSubmit)="AddProduct(addForm.value)">
+    <label>
+      <input placeholder="Product name..." formControlName="name" type="text" class="form-control"/>
+    </label>
+    <label>
+      <label class="mb-1">
+        Type
+      </label>
+      <br>
+      <label>
+        <select class="form-control mr-2" formControlName="type">
+          <option>Food</option>
+          <option>Clothes</option>
+          <option>Household chemicals</option>
+        </select>
+      </label>
+    </label>
+    <label>
+      <label class="mb-1">
+        Country
+      </label>
+      <br>
+      <label>
+        <select class="form-control" formControlName="country">
+          <option>Belarus</option>
+          <option>Russia</option>
+          <option>USA</option>
+          <option>UK</option>
+          <option>Spain</option>
+          <option>Poland</option>
+          <option>Egypt</option>
+          <option>Germany</option>
+        </select>
+      </label>
+    </label>
+    <button class="btn btn-dark form-control " type="submit">Submit</button>
+  </form>
+</div>
+</div>

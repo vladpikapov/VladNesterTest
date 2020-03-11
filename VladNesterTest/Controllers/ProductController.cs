@@ -39,12 +39,40 @@ namespace VladNesterTest.Controllers
                             Type = reader.GetString(2),
                             Country = reader.GetString(3)
                         });
-                       
+
                     }
                 }
                 reader.Close();
             }
             return products;
+        }
+
+        [HttpPost]
+        public void AddProduct(Product product)
+        {
+            using (SqlConnection connection = new SqlConnection(Configuration.GetConnectionString("DefaultConnection")))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand("AddProduct", connection);
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@Name", product.Name);
+                command.Parameters.AddWithValue("@Type", product.Type);
+                command.Parameters.AddWithValue("@Country", product.Country);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public void DeleteProduct(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(Configuration.GetConnectionString("DefaultConnection")))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand("DeleteProduct", connection);
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@Id", id);
+                command.ExecuteNonQuery();
+            }
         }
 
     }

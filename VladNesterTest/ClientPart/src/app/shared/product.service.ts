@@ -11,6 +11,14 @@ export class ProductService {
   public getProducts() {
     return this.http.get('http://localhost:63170/api/Product');
   }
+
+  public postProducts(product: Products) {
+    return this.http.post('http://localhost:63170/api/Product', product);
+  }
+
+  public deleteProducts(id: number) {
+    return this.http.delete('http://localhost:63170/api/Product/' + id);
+  }
 }
 
 export interface Products {

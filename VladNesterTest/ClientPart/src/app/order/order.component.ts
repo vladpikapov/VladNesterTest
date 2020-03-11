@@ -8,11 +8,12 @@ import {Orders, OrderService} from '../shared/OrderService/order.service';
 })
 export class OrderComponent implements OnInit {
   Orders: Orders[];
+
   constructor(private service: OrderService) {
     service.GetOrders().subscribe(res => this.Orders = res as Orders[], error => console.log(error));
   }
 
   ngOnInit(): void {
   }
-
 }
+

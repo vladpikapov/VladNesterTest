@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule, Routes} from '@angular/router';
 
 import { AppComponent } from './app.component';
@@ -17,13 +17,14 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     OrderComponent,
-    ProductComponent
+    ProductComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    RouterModule.forRoot(appRoutes, {enableTracing: true})
+    RouterModule.forRoot(appRoutes, {enableTracing: true}),
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
