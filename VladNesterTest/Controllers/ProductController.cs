@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using VladNesterTest.Models;
+using VladNesterTest.SomeLogic;
 
 namespace VladNesterTest.Controllers
 {
@@ -26,7 +27,8 @@ namespace VladNesterTest.Controllers
             using (SqlConnection connection = new SqlConnection(Configuration.GetConnectionString("DefaultConnection")))
             {
                 connection.Open();
-                SqlCommand command = new SqlCommand("SELECT * FROM PRODUCTS", connection);
+                SqlCommand command = new SqlCommand("SelectProducts", connection);
+                command.CommandType = System.Data.CommandType.StoredProcedure;
                 SqlDataReader reader = command.ExecuteReader();
                 if (reader.HasRows)
                 {
@@ -37,7 +39,8 @@ namespace VladNesterTest.Controllers
                             Id = reader.GetInt32(0),
                             Name = reader.GetString(1),
                             Type = reader.GetString(2),
-                            Country = reader.GetString(3)
+                            Country = reader.GetString(3),
+                            Count = reader.GetInt32(4)
                         });
 
                     }
@@ -58,21 +61,20 @@ namespace VladNesterTest.Controllers
                 command.Parameters.AddWithValue("@Name", product.Name);
                 command.Parameters.AddWithValue("@Type", product.Type);
                 command.Parameters.AddWithValue("@Country", product.Country);
+                command.Parameters.AddWithValue("@Count", product.Count);
                 command.ExecuteNonQuery();
             }
         }
-
-        [HttpDelete("{id}")]
-        public void DeleteProduct(int id)
+        [HttpPut("add/{id}")]
+        public void AddOneProduct(int id)
         {
-            using (SqlConnection connection = new SqlConnection(Configuration.GetConnectionString("DefaultConnection")))
-            {
-                connection.Open();
-                SqlCommand command = new SqlCommand("DeleteProduct", connection);
-                command.CommandType = System.Data.CommandType.StoredProcedure;
-                command.Parameters.AddWithValue("@Id", id);
-                command.ExecuteNonQuery();
-            }
+            ProductMethods.AddOrDropeOneProduct("AddOneProduct", id, Configuration);
+        }
+
+        [HttpPut("drop/{id}")]
+        public void DropOneProduct(int id)
+        {
+            ProductMethods.AddOrDropeOneProduct("DropOneProduct", id, Configuration);
         }
 
     }

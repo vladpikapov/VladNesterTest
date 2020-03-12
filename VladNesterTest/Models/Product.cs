@@ -11,5 +11,6 @@ namespace VladNesterTest.Models
         public string Name { get; set; }
         public string Type { get; set; }
         public string Country { get; set; }
+        public int Count { get; set; }
     }
 }

@@ -1,11 +1,12 @@
-<div class="container">
-  <table class="table table-dark mt-5">
+<div class="row mt-5">
+  <div class="col-8">
+  <table class="table table-dark  ">
     <tr>
-      <th>№ заказа</th>
-      <th>Заказчик</th>
-      <th>Статус заказа</th>
-      <th>Дата отправки</th>
-      <th>Дата получения</th>
+      <th>№</th>
+      <th>Customer</th>
+      <th>Order status</th>
+      <th>Start date</th>
+      <th>Date of receiving</th>
 
     </tr>
     <tr *ngFor="let order of Orders">
@@ -13,17 +14,10 @@
       <td>{{order.ordererName}}</td>
       <td>{{order.orderStatus}}</td>
       <td>{{order.startDate |date:"dd.MM.yyyy"}}</td>
-      <td *ngIf="order.endDate === null">Не получен...</td>
+      <td *ngIf="order.endDate === null">not received...</td>
       <td *ngIf="order.endDate != null">{{order.endDate|date:"dd.MM.yyyy"}}</td>
-      <td>
-        <table class ="table table-dark">
-          <tr>
-            <th>Название товара</th>
-            <th>Страна</th>
-            <th>Тип</th>
-            <th>Количество</th>
-          </tr>
-          <tr *ngFor="let product of order.orderedProducts">
+      <td *ngFor="let product of order.orderedProducts">
+      <table>
             <td>
               {{product.product.name}}
             </td>
@@ -36,11 +30,21 @@
             <td>
               {{product.countProduct}}
             </td>
-          </tr>
-        </table>
+      </table>
       </td>
     </tr>
   </table>
 </div>
+</div>
+<form [formGroup]="addForm">
+  <input type="text" class="form-control" formControlName="ordererName"/>
+  <input type="text" class="form-control" formControlName="orderStatus"/>
+  <input type="date" class="form-control" formControlName="startDate"/>
+  <div *ngFor="let ind of addArray">
+
+  </div>
+  <button (click)="AddProduct()" class="btn btn-outline-dark">Add product</button>
+  <button (click)="RemoveProduct()" class="btn btn-outline-dark" [disabled]="addArray.length > 1 ? false : true">Remove product</button>
+</form>
 
 

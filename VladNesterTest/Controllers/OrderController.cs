@@ -55,5 +55,23 @@ namespace VladNesterTest.Controllers
 
             return orders;
         }
+
+        public void PostOrder(Order order)
+        {
+            using (SqlConnection connection = new SqlConnection(Configuration.GetConnectionString("DefaultConnection")))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand("AddOrder", connection);
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@Name", order.OrdererName);
+                command.Parameters.AddWithValue("@StartDate", order.StartDate);
+                foreach (var prod in order.OrderedProducts)
+                {
+                    command.Parameters.AddWithValue("@ProdCount", prod.CountProduct);
+                    command.Parameters.AddWithValue("@IdProd", prod.Product.Id);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

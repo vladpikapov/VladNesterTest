@@ -16,8 +16,12 @@ export class ProductService {
     return this.http.post('http://localhost:63170/api/Product', product);
   }
 
-  public deleteProducts(id: number) {
-    return this.http.delete('http://localhost:63170/api/Product/' + id);
+  public addProductOneValue(id: number) {
+    return this.http.put('http://localhost:63170/api/Product/add/' + id, null);
+  }
+
+  public dropProductOneValue(id: number) {
+    return this.http.put('http://localhost:63170/api/Product/drop/' + id, null);
   }
 }
 
@@ -26,4 +30,5 @@ export interface Products {
   name: string;
   type: string;
   country: string;
+  count: number;
 }
