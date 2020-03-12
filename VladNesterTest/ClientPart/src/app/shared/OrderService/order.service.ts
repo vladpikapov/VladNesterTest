@@ -13,8 +13,8 @@ export class OrderService {
     return this.http.get('http://localhost:63170/api/Order');
   }
 
-  public GetOrder(id: number) {
-    return this.http.get('http://localhost:63170/api/Order/' + id);
+  public postOrder(form: any) {
+    return this.http.post('http://localhost:63170/api/Order', form);
   }
 
 }

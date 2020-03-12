@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {OrderedProduct, Orders, OrderService} from '../shared/OrderService/order.service';
 import {Form, FormArray, FormBuilder, FormControl, FormControlName, Validators} from '@angular/forms';
-import {Products} from '../shared/product.service';
+import {Products, ProductService} from '../shared/product.service';
 
 @Component({
   selector: 'app-order',
@@ -14,14 +14,15 @@ export class OrderComponent implements OnInit {
   Orders: Orders[];
   addForm;
 
-  constructor(private service: OrderService, formBuilder: FormBuilder) {
-    this.addForm = formBuilder.group({
+  constructor(private service: OrderService, private formBuilder: FormBuilder, private prodService: ProductService) {
+    this.addForm = this.formBuilder.group({
       ordererName: new FormControl('', Validators.required),
       orderStatus: new FormControl('', Validators.required),
       startDate: new FormControl('', Validators.required),
       endDate: null,
-      orderedProducts: formBuilder.group({
-        product: formBuilder.group({
+      orderedProducts: this.formBuilder.group({
+        product: this.formBuilder.group({
+          id: '',
           name: '',
           type: '',
           country: '',
@@ -35,6 +36,10 @@ export class OrderComponent implements OnInit {
     this.service.GetOrders().subscribe(res => this.Orders = res as Orders[], error => console.log(error));
   }
 
+  getProducts() {
+    this.prodService.getProducts().subscribe(res => this.products = res as Products[]);
+  }
+
   AddProduct() {
     this.addArray.push(null);
   }
@@ -43,5 +48,8 @@ export class OrderComponent implements OnInit {
   }
 
 
+  AddOrder(value: any) {
+    console.log(value);
+  }
 }
 
