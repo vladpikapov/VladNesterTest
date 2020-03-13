@@ -10,14 +10,42 @@
 
     </tr>
     <tr *ngFor="let order of Orders">
-      <td>{{order.id}}</td>
-      <td>{{order.ordererName}}</td>
-      <td>{{order.orderStatus}}</td>
-      <td>{{order.startDate |date:"dd.MM.yyyy"}}</td>
-      <td *ngIf="order.endDate === null">not received...</td>
-      <td *ngIf="order.endDate != null">{{order.endDate|date:"dd.MM.yyyy"}}</td>
-      <td *ngFor="let product of order.orderedProducts" align="center">
-      <table class="table text-light " align="center">
+      <td>
+        {{order.id}}
+      </td>
+      <td>
+        {{order.ordererName}}
+      </td>
+      <td *ngIf="EditOrderId === order.id">
+        <label>
+          <select [(ngModel)]="order.orderStatus">
+            <option>
+              Formation
+            </option>
+            <option>
+              Waiting for delivery
+            </option>
+            <option>
+              Delivered
+            </option>
+          </select>
+        </label>
+      </td>
+      <td *ngIf="EditOrderId !== order.id" (click)="changeStatus(order.id)">
+        {{order.orderStatus}}
+      </td>
+      <td>
+        {{order.startDate |date:"dd.MM.yyyy"}}
+      </td>
+      <td *ngIf="order.endDate === null">
+        not received...
+      </td>
+      <td *ngIf="order.endDate != null">
+        {{order.endDate|date:"dd.MM.yyyy"}}
+      </td>
+      <td>
+      <table class="table text-light ">
+        <tr *ngFor="let product of order.orderedProducts">
             <td>
               {{product.product.name}}
             </td>
@@ -30,7 +58,11 @@
             <td>
               {{product.countProduct}}
             </td>
+        </tr>
       </table>
+      </td>
+      <td *ngIf="EditOrderId === order.id">
+        <button class="btn btn-success" (click)="saveOrderStatus(order)">Save</button>
       </td>
     </tr>
   </table>
@@ -55,29 +87,35 @@
         </button>
       </div>
       <div class="modal-body">
-        <form [formGroup]="addForm" (ngSubmit)="AddOrder(addForm.value)">
-          <input type="text" class="form-control" formControlName="ordererName"/>
-          <input type="text" class="form-control" formControlName="orderStatus"/>
-          <input type="date" class="form-control" formControlName="startDate"/>
-          <div formGroup="orderedProducts">
-          <div *ngFor="let ind of addArray" formGroup="product">
-          <select formControlName="id">
-          <option *ngFor="let prod of products">
-            {{prod.id}}
-          </option>
-          </select>
-          </div>
-            <input type="range" min="1" max="2"/>
-          </div>
-          <button (click)="AddProduct()" class="btn btn-outline-dark">Add product</button>
-          <button (click)="RemoveProduct()" class="btn btn-outline-dark" [disabled]="addArray.length > 1 ? false : true">Remove product</button>
+        <form (ngSubmit)="addOrder(addForm.value)" [formGroup]="addForm">
+          <label>
+            <input type="text" class="form-control" formControlName="ordererName"/>
+          </label>
+          <label>
+            <input type="date" class="form-control" formControlName="startDate"/>
+          </label>
+          <div formArrayName="orderedProducts" *ngFor="let item of this.addForm.get('orderedProducts').controls; let i = index">
+            <div [formGroupName]= "i" class="list-group-item">
+              <div formGroupName="product">
+                <label>
+                  <select formControlName="id">
+
+                  </select>
+                </label>
+              </div>
+              <label>
+                <input type="range" min="1" max="10" formControlName="countProduct">
+              </label>
+            </div>
+            <button (click)="removeFromProductList(i)" class="btn btn-outline-dark">Remove product</button>
+            </div>
+          <button (click)="addToProductList()" class="btn btn-outline-dark">Add product</button>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Add</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!this.addForm.valid">Add</button>
           </div>
         </form>
       </div>
-
     </div>
   </div>
 </div>

@@ -17,6 +17,8 @@ create table PRODUCTS
 	)
 );
 
+select * from ORDERSPRODUCTS;
+
 create table ORDERS
 (
 	Id int identity(1,1) primary key,
@@ -88,7 +90,7 @@ create procedure SelectOrderProducts
  as
 begin
 select p.Id,p.ProductName,p.ProductType,p.Country,op.CountOrderedProducts from ORDERS o inner join ORDERSPRODUCTS op
-on o.Id = op.OrdersFK inner join PRODUCTS p on op.ProductFK = p.Id where p.Id = @Id;
+on o.Id = op.OrdersFK inner join PRODUCTS p on op.ProductFK = p.Id where o.Id = @Id;
 end;
 go
 
@@ -125,19 +127,55 @@ create procedure AddOrder
 	@IdProd int
 	as
 	begin
-	if((select ProductCount from PRODUCTS where Id = @IdProd) >= @ProdCount)
-	begin
-	insert ORDERS(Orderer,OrderStatus, StartDate, EndDate) values (@Name,'Formation',@StartDate,null)
-	insert ORDERSPRODUCTS(OrdersFK,ProductFK,CountOrderedProducts) values ((select top 1 Id from ORDERS where Orderer = @Name AND StartDate = @StartDate order by Id desc),@IdProd,@ProdCount);
-	update PRODUCTS set ProductCount = ProductCount - @ProdCount;
-	end
-	end;
+		if((select ProductCount from PRODUCTS where Id = @IdProd) >= @ProdCount)
+		begin
+			if((select count(*) from ORDERS where Orderer = @Name AND StartDate = @StartDate) != 1)
+				begin
+				insert ORDERS(Orderer,OrderStatus, StartDate, EndDate) values (@Name,'Formation',@StartDate,null)
+				end
+				if((select count(*) from ORDERSPRODUCTS o where exists(select Id from ORDERS where Id = o.OrdersFK AND StartDate = '02.22.2020') AND o.ProductFK = 1) = 1)
+				begin
+				declare @orderId int = (select id from orders where Orderer = @Name AND StartDate = @StartDate);
+					update ORDERSPRODUCTS set CountOrderedProducts += @ProdCount where OrdersFK = @orderId;
+					update PRODUCTS set ProductCount = ProductCount - @ProdCount where Id = @IdProd;
+				end
+				else
+				begin
+					insert ORDERSPRODUCTS(OrdersFK,ProductFK,CountOrderedProducts) values ((select Id from ORDERS where Orderer = @Name AND StartDate = @StartDate),@IdProd,@ProdCount);
+					update PRODUCTS set ProductCount = ProductCount - @ProdCount where Id = @IdProd;
+				end
+				end
+		end;
 	go
-exec AddOrder 'Vlad Nester','03.09.2020',4,1
+
+exec AddOrder 'Vlad Nester','02.22.2020',5,1
+
 	go
 exec DropOneProduct 1;
 
 	exec AddOneProduct 1;
+
+	go
+
+	create procedure ChangeStatus
+	@Id int,
+	@Status nvarchar(20)
+	as
+	begin
+		if(@Status = 'Delivered')
+		begin
+			update ORDERS set EndDate = SYSDATETIME(), OrderStatus = @Status where Id = @Id;
+		end
+		else
+		begin
+			update ORDERS set OrderStatus = @Status where Id = @Id;
+		end
+	end;
+
+	go
+exec ChangeStatus 'Vlad Nester', '02.22.2020', 'Delivered';
+
+select * from ORDERS;
 --drop
 
 drop table ORDERSPRODUCTS;
@@ -145,6 +183,7 @@ drop table ORDERS;
 drop table PRODUCTS;
 drop procedure SelectOrderProducts;
 drop procedure AddProduct;
+drop procedure ChangeStatus;
 drop procedure AddOrder
 drop procedure DropOneProduct;
 drop procedure SelectProducts;

@@ -73,5 +73,18 @@ namespace VladNesterTest.Controllers
                 }
             }
         }
+
+        [HttpPut("{id}")]
+        public void ChangeStatus(int id,[FromBody]Order order)
+        {
+            using (SqlConnection connection = new SqlConnection(Configuration.GetConnectionString("DefaultConnection")))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand("ChangeStatus", connection);
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@Id", order.Id);
+                command.Parameters.AddWithValue("@Status", order.OrderStatus);
+            }
+        }
     }
 }

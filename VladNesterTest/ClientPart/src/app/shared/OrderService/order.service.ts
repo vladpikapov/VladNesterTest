@@ -17,6 +17,9 @@ export class OrderService {
     return this.http.post('http://localhost:63170/api/Order', form);
   }
 
+  public updateOrder(id: number, value: any) {
+    return this.http.put('http://localhost:63170/api/Order/' + id , value);
+  }
 }
 
 

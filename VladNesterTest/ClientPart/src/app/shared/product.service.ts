@@ -23,6 +23,7 @@ export class ProductService {
   public dropProductOneValue(id: number) {
     return this.http.put('http://localhost:63170/api/Product/drop/' + id, null);
   }
+
 }
 
 export interface Products {
