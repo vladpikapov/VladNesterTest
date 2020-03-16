@@ -56,6 +56,7 @@ namespace VladNesterTest.Controllers
             return orders;
         }
 
+        [HttpPost]
         public void PostOrder(Order order)
         {
             using (SqlConnection connection = new SqlConnection(Configuration.GetConnectionString("DefaultConnection")))
@@ -74,8 +75,8 @@ namespace VladNesterTest.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public void ChangeStatus(int id,[FromBody]Order order)
+        [HttpPut]
+        public void ChangeStatus(Order order)
         {
             using (SqlConnection connection = new SqlConnection(Configuration.GetConnectionString("DefaultConnection")))
             {
@@ -84,6 +85,7 @@ namespace VladNesterTest.Controllers
                 command.CommandType = System.Data.CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@Id", order.Id);
                 command.Parameters.AddWithValue("@Status", order.OrderStatus);
+                command.ExecuteNonQuery();
             }
         }
     }

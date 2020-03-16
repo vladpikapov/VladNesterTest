@@ -133,7 +133,7 @@ create procedure AddOrder
 				begin
 				insert ORDERS(Orderer,OrderStatus, StartDate, EndDate) values (@Name,'Formation',@StartDate,null)
 				end
-				if((select count(*) from ORDERSPRODUCTS o where exists(select Id from ORDERS where Id = o.OrdersFK AND StartDate = '02.22.2020') AND o.ProductFK = 1) = 1)
+				if((select count(*) from ORDERSPRODUCTS o where exists(select Id from ORDERS where Id = o.OrdersFK AND StartDate = @StartDate) AND o.ProductFK = @IdProd) = 1)
 				begin
 				declare @orderId int = (select id from orders where Orderer = @Name AND StartDate = @StartDate);
 					update ORDERSPRODUCTS set CountOrderedProducts += @ProdCount where OrdersFK = @orderId;

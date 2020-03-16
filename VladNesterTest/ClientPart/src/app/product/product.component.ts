@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Products, ProductService} from '../shared/product.service';
 import {FormBuilder, FormControl, Validators} from '@angular/forms';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-product',
@@ -12,6 +13,7 @@ export class ProductComponent implements OnInit {
 
   countValue = 1;
   addForm;
+  fileName = 'Products.xlsx';
   Products: Products[];
   constructor(private service: ProductService, private formBuilder: FormBuilder) {
     this.addForm = this.formBuilder.group({
@@ -43,5 +45,14 @@ export class ProductComponent implements OnInit {
 
   ChangeCount(event: any) {
     this.countValue = event.target.value;
+  }
+
+  exportExcel(): void {
+    const element = document.getElementById('excel-table');
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.Products);
+
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, this.fileName);
   }
 }

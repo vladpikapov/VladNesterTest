@@ -17,25 +17,22 @@ export class OrderService {
     return this.http.post('http://localhost:63170/api/Order', form);
   }
 
-  public updateOrder(id: number, value: any) {
-    return this.http.put('http://localhost:63170/api/Order/' + id , value);
+  public updateOrder(value: any) {
+    return this.http.put('http://localhost:63170/api/Order', value);
   }
 }
 
-
-
-export interface Orders {
+export class Orders {
   id: number;
   ordererName: string;
   orderStatus: string;
-  productCount: number;
   startDate: Date;
   endDate: Date;
-  orderedProducts: OrderedProduct[] ;
-
+  orderedProducts: OrderedProduct[] = [];
 }
 
-export  interface OrderedProduct {
+export class OrderedProduct {
   product: Products;
   countProduct: number;
 }
+

@@ -1,13 +1,29 @@
 <div class="row mt-5">
-  <div class="col-10">
-  <table class="table table-dark  ">
+  <div class="col-11">
+  <table class="table table-dark" >
     <tr>
       <th>№</th>
       <th>Customer</th>
       <th>Order status</th>
       <th>Start date</th>
       <th>Date of receiving</th>
-
+      <th align="center">
+        <div class="">
+        <ul  class="list-group list-group-horizontal list-group-flush" style="list-style: none">
+          <li class="list-group-item bg-dark mr-5" >
+            Name
+          </li>
+          <li class="list-group-item bg-dark mr-4" >
+            Country
+          </li>
+          <li class="list-group-item bg-dark mr-4" >
+            Type
+          </li>
+          <li class="list-group-item bg-dark" >
+            Count
+          </li>
+        </ul>
+      </div></th>
     </tr>
     <tr *ngFor="let order of Orders">
       <td>
@@ -18,7 +34,7 @@
       </td>
       <td *ngIf="EditOrderId === order.id">
         <label>
-          <select [(ngModel)]="order.orderStatus">
+          <select [(ngModel)]="order.orderStatus" class="custom-control custom-select custom-select-sm">
             <option>
               Formation
             </option>
@@ -31,7 +47,7 @@
           </select>
         </label>
       </td>
-      <td *ngIf="EditOrderId !== order.id" (click)="changeStatus(order.id)">
+      <td *ngIf="EditOrderId !== order.id" (dblclick)="changeStatus(order)">
         {{order.orderStatus}}
       </td>
       <td>
@@ -43,23 +59,23 @@
       <td *ngIf="order.endDate != null">
         {{order.endDate|date:"dd.MM.yyyy"}}
       </td>
-      <td>
-      <table class="table text-light ">
-        <tr *ngFor="let product of order.orderedProducts">
-            <td>
+      <td align="center">
+      <div>
+        <ul  *ngFor="let product of order.orderedProducts" class="align-content-center list-group list-group-horizontal list-group-flush" style="list-style: none">
+            <li class="list-group-item bg-dark mr-5">
               {{product.product.name}}
-            </td>
-            <td>
+            </li>
+            <li class="list-group-item bg-dark mr-5">
               {{product.product.country}}
-            </td>
-            <td>
+            </li>
+            <li class="list-group-item bg-dark mr-5">
               {{product.product.type}}
-            </td>
-            <td>
+            </li>
+            <li class="list-group-item bg-dark mr-5">
               {{product.countProduct}}
-            </td>
-        </tr>
-      </table>
+            </li>
+        </ul>
+      </div>
       </td>
       <td *ngIf="EditOrderId === order.id">
         <button class="btn btn-success" (click)="saveOrderStatus(order)">Save</button>
@@ -67,55 +83,13 @@
     </tr>
   </table>
 </div>
-  <div class="ml-5 pl-3 pt-3 mt-4">
-  <button type="button" (click)="getProducts()" class="btn btn-dark" data-toggle="modal" data-target="#exampleModal">
+  <div class="col-1">
+  <button type="button" routerLink="/add-order" class="btn btn-dark">
     Add order
   </button>
   </div>
 </div>
-
-
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add order</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form (ngSubmit)="addOrder(addForm.value)" [formGroup]="addForm">
-          <label>
-            <input type="text" class="form-control" formControlName="ordererName"/>
-          </label>
-          <label>
-            <input type="date" class="form-control" formControlName="startDate"/>
-          </label>
-          <div formArrayName="orderedProducts" *ngFor="let item of this.addForm.get('orderedProducts').controls; let i = index">
-            <div [formGroupName]= "i" class="list-group-item">
-              <div formGroupName="product">
-                <label>
-                  <select formControlName="id">
-
-                  </select>
-                </label>
-              </div>
-              <label>
-                <input type="range" min="1" max="10" formControlName="countProduct">
-              </label>
-            </div>
-            <button (click)="removeFromProductList(i)" class="btn btn-outline-dark">Remove product</button>
-            </div>
-          <button (click)="addToProductList()" class="btn btn-outline-dark">Add product</button>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" [disabled]="!this.addForm.valid">Add</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+<div>
+  <button class="btn btn-success" (click)="exportExcel()">EXPORT TO EXCEL</button>
 </div>
+

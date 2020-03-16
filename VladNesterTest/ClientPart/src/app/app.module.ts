@@ -7,10 +7,13 @@ import {RouterModule, Routes} from '@angular/router';
 import { AppComponent } from './app.component';
 import { OrderComponent } from './order/order.component';
 import { ProductComponent } from './product/product.component';
+import { AddOrderComponent } from './add-order/add-order.component';
+
 
 const appRoutes: Routes = [
   {path: 'product_list', component: ProductComponent},
   {path: 'order_list', component: OrderComponent},
+  {path: 'add-order', component: AddOrderComponent},
   ];
 
 @NgModule({
@@ -18,13 +21,14 @@ const appRoutes: Routes = [
     AppComponent,
     OrderComponent,
     ProductComponent,
+    AddOrderComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot(appRoutes, {enableTracing: true}),
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

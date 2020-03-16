@@ -8,7 +8,7 @@
     <th>Country</th>
     <th>Count</th>
   </tr>
-  <tr *ngFor="let prod of Products; let ind = index">
+  <tr *ngFor="let prod of Products; let ind = index" id="excel-table">
     <td>
       {{ind + 1}}
     </td>
@@ -25,14 +25,13 @@
       {{prod.count}}
     </td>
     <td align="center">
-    <button class="btn btn-outline-light w-50" [disabled]="prod.count === 99" (click)="AddProductOneValue(prod.id)" >+</button>
-      </td>
+      <button class="btn btn-outline-light w-50" [disabled]="prod.count === 99" (click)="AddProductOneValue(prod.id)" >+</button>
+    </td>
     <td align="center">
       <button class="btn btn-outline-light w-50" [disabled]="prod.count === 0" (click)="DropProductOneValue(prod.id)" >-</button>
     </td>
   </tr>
 </table>
-<a  class="btn btn-outline-light" routerLink="/order_list" >Info</a>
   </div>
 
   <div class="col-3 border border-dark rounded-sm shadow shadow-sm h-auto">
@@ -88,4 +87,9 @@
     <button class="btn btn-dark form-control " [disabled]="!addForm.valid" type="submit">Submit</button>
   </form>
 </div>
+  <div>
+    <button class="btn btn-success" style="cursor: pointer" (click)="exportExcel()">
+      export to excel
+    </button>
+  </div>
 </div>

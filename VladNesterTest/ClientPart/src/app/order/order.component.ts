@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {OrderedProduct, Orders, OrderService} from '../shared/OrderService/order.service';
 import {Form, FormArray, FormBuilder, FormControl, FormControlName, FormGroup, Validators} from '@angular/forms';
-import {Products, ProductService} from '../shared/product.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-order',
@@ -9,74 +9,36 @@ import {Products, ProductService} from '../shared/product.service';
   styleUrls: ['./order.component.css']
 })
 export class OrderComponent implements OnInit {
-  products: Products[];
   Orders: Orders[];
-  orderStatus ;
   EditOrderId;
-  addForm;
+  fileName = 'Orders.xlsx';
 
-  constructor(private service: OrderService, private formBuilder: FormBuilder, private prodService: ProductService) {
-    this.addForm = this.formBuilder.group({
-      ordererName: '',
-      orderStatus: '',
-      startDate: '',
-      endDate: null,
-      orderedProducts: this.formBuilder.array([this.createOrderedProduct()], Validators.required)
-    });
+  constructor(private service: OrderService, private formBuilder: FormBuilder) {
   }
 
   ngOnInit(): void {
     this.service.GetOrders().subscribe(res => this.Orders = res as Orders[], error => console.log(error));
   }
 
-  getProducts() {
-    this.prodService.getProducts().subscribe(res => this.products = res as Products[]);
-  }
-
-  createOrderedProduct(): FormGroup {
-    return this.formBuilder.group({
-      product: this.formBuilder.group({
-        id: '',
-        name: '',
-        type: '',
-        country: '',
-        count: 1
-      }),
-      countProduct: 0
-    });
-  }
-
-  addOrder(value: any) {
-
-    console.log(JSON.stringify(value));
-    this.service.postOrder(value).subscribe(_ => this.service.GetOrders().subscribe(res => this.Orders = res as Orders[]));
-  }
-
-  addToProductList() {
-    this.addForm.get('orderedProducts').push(this.createOrderedProduct());
-  }
-
-  removeFromProductList(id: number) {
-    this.addForm.get('orderedProducts').removeAt(id);
-  }
-
-  getMaxProductValue() {
-
-  }
-
-  parseToInt(id: number): number {
-    return Number(id);
-  }
-
-  changeStatus(id: number) {
-    this.EditOrderId = id;
+  changeStatus(order: Orders) {
+    if (order.endDate == null) {
+      this.EditOrderId = order.id;
+    }
   }
 
   saveOrderStatus(order: Orders) {
     console.log(order.orderStatus);
     // tslint:disable-next-line:max-line-length
-    this.service.updateOrder(order.id, order).subscribe();
+    this.service.updateOrder(order).subscribe(_ => this.service.GetOrders().subscribe(res => this.Orders = res as Orders[]));
     this.EditOrderId = null;
+  }
+
+  exportExcel(): void {
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.Orders);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, this.fileName);
+    console.log(this.Orders);
   }
 }
 

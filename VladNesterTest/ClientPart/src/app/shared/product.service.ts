@@ -1,6 +1,16 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 
+export class Products {
+  id: number;
+  name: string;
+  type: string;
+  country: string;
+  count: number;
+  constructor() {
+  }
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -24,12 +34,4 @@ export class ProductService {
     return this.http.put('http://localhost:63170/api/Product/drop/' + id, null);
   }
 
-}
-
-export interface Products {
-  id: number;
-  name: string;
-  type: string;
-  country: string;
-  count: number;
 }
