@@ -9,9 +9,9 @@ namespace VladNesterTest.SomeLogic
 {
     public class ProductMethods
     {
-        public static void AddOrDropeOneProduct(string procedure, int id, IConfiguration configuration)
+        public static void AddOrDropeOneProduct(string procedure, int id, string connecionString)
         {
-            using (SqlConnection connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection")))
+            using (SqlConnection connection = new SqlConnection(connecionString))
             {
                 connection.Open();
                 SqlCommand command = new SqlCommand(procedure, connection);

@@ -1,93 +1,98 @@
 <div class="row mt-5 ml-5">
   <div class="col-8">
-<table class="table table-dark shadow shadow-sm">
-  <tr>
-    <th>№</th>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Country</th>
-    <th>Count</th>
-  </tr>
-  <tr *ngFor="let prod of Products; let ind = index" id="excel-table">
-    <td>
-      {{ind + 1}}
-    </td>
-    <td>
-      {{prod.name}}
-    </td>
-    <td>
-      {{prod.type}}
-    </td>
-    <td>
-      {{prod.country}}
-    </td>
-    <td>
-      {{prod.count}}
-    </td>
-    <td align="center">
-      <button class="btn btn-outline-light w-50" [disabled]="prod.count === 99" (click)="AddProductOneValue(prod.id)" >+</button>
-    </td>
-    <td align="center">
-      <button class="btn btn-outline-light w-50" [disabled]="prod.count === 0" (click)="DropProductOneValue(prod.id)" >-</button>
-    </td>
-  </tr>
-</table>
+    <table class="table table-dark shadow shadow-sm">
+      <tr>
+        <th>№</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Country</th>
+        <th>Count</th>
+      </tr>
+      <tr *ngFor="let prod of Products; let ind = index" id="excel-table">
+        <td>
+          {{ind + 1}}
+        </td>
+        <td>
+          {{prod.name}}
+        </td>
+        <td>
+          {{prod.type}}
+        </td>
+        <td>
+          {{prod.country}}
+        </td>
+        <td>
+          {{prod.count}}
+        </td>
+        <td align="center">
+          <button class="btn btn-outline-light w-50" [disabled]="prod.count === 99"
+                  (click)="AddProductOneValue(prod.id)">+
+          </button>
+        </td>
+        <td align="center">
+          <button class="btn btn-outline-light w-50" [disabled]="prod.count === 0"
+                  (click)="DropProductOneValue(prod.id)">-
+          </button>
+        </td>
+      </tr>
+    </table>
   </div>
 
   <div class="col-3 border border-dark rounded-sm shadow shadow-sm h-auto">
     <br>
-    <h3 class="mb-1" >Add product</h3>
+    <h3 class="mb-1">Add product</h3>
     <br>
-  <form class="form-group"  [formGroup]="addForm" (ngSubmit)="AddProduct(addForm.value)">
-    <label>
-      <input placeholder="Product name..." formControlName="name" type="text" class="form-control"/>
-    </label>
-    <br>
-    <label>
-      <label class="mb-1">
-        Type
+    <form class="form-group" [formGroup]="addForm" (ngSubmit)="AddProduct(addForm.value)">
+      <label>
+        <input placeholder="Product name..." formControlName="name" type="text" class="form-control"/>
       </label>
       <br>
       <label>
-        <select class="form-control mr-2" formControlName="type">
-          <option>Food</option>
-          <option>Clothes</option>
-          <option>Household chemicals</option>
-        </select>
-      </label>
-    </label>
-    <br>
-    <label>
-      <label class="mb-1">
-        Country
+        <label class="mb-1">
+          Type
+        </label>
+        <br>
+        <label>
+          <select class="form-control mr-2" formControlName="type">
+            <option>Food</option>
+            <option>Clothes</option>
+            <option>Tech</option>
+          </select>
+        </label>
       </label>
       <br>
       <label>
-        <select class="form-control" formControlName="country">
-          <option>Belarus</option>
-          <option>Russia</option>
-          <option>USA</option>
-          <option>UK</option>
-          <option>Spain</option>
-          <option>Poland</option>
-          <option>Egypt</option>
-          <option>Germany</option>
-        </select>
+        <label class="mb-1">
+          Country
+        </label>
+        <br>
+        <label>
+          <select class="form-control" formControlName="country">
+            <option>Belarus</option>
+            <option>Russia</option>
+            <option>USA</option>
+            <option>UK</option>
+            <option>Spain</option>
+            <option>Poland</option>
+            <option>Egypt</option>
+            <option>Germany</option>
+          </select>
+        </label>
       </label>
-    </label>
-    <br>
-    <label class="mb-1">
-      Quantity
-    </label>
       <br>
-    <label>
-      <input type="range" min="1" max="99" value="1"  formControlName="count" class="form-control-range" (input)="ChangeCount($event)"/>
-      {{countValue}}
-    </label>
-    <button class="btn btn-dark form-control " [disabled]="!addForm.valid" type="submit">Submit</button>
-  </form>
-</div>
-  <div>
+      <label class="mb-1">
+        Quantity
+      </label>
+      <br>
+      <label>
+        <input type="range" min="1" max="99" value="1" formControlName="count" class="form-control-range"
+               (input)="ChangeCount($event)"/>
+        {{countValue}}
+      </label>
+      <button class="btn btn-dark form-control " [disabled]="!addForm.valid" type="submit">Submit</button>
+    </form>
+  </div>
+  <div class="col-2">
     <button class="btn btn-success" style="cursor: pointer" (click)="exportExcel()">
       export to excel
     </button>

@@ -15,16 +15,16 @@ namespace VladNesterTest.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        IConfiguration Configuration { get; set; }
+        string ConnectionString { get; set; }
         public ProductController(IConfiguration configuration)
         {
-            Configuration = configuration;
+            ConnectionString = configuration.GetConnectionString("DefaultConnection");
         }
         [HttpGet]
         public List<Product> GetProducts()
         {
             List<Product> products = new List<Product>();
-            using (SqlConnection connection = new SqlConnection(Configuration.GetConnectionString("DefaultConnection")))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 SqlCommand command = new SqlCommand("SelectProducts", connection);
@@ -53,7 +53,7 @@ namespace VladNesterTest.Controllers
         [HttpPost]
         public void AddProduct(Product product)
         {
-            using (SqlConnection connection = new SqlConnection(Configuration.GetConnectionString("DefaultConnection")))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 SqlCommand command = new SqlCommand("AddProduct", connection);
@@ -68,13 +68,13 @@ namespace VladNesterTest.Controllers
         [HttpPut("add/{id}")]
         public void AddOneProduct(int id)
         {
-            ProductMethods.AddOrDropeOneProduct("AddOneProduct", id, Configuration);
+            ProductMethods.AddOrDropeOneProduct("AddOneProduct", id, ConnectionString);
         }
 
         [HttpPut("drop/{id}")]
         public void DropOneProduct(int id)
         {
-            ProductMethods.AddOrDropeOneProduct("DropOneProduct", id, Configuration);
+            ProductMethods.AddOrDropeOneProduct("DropOneProduct", id, ConnectionString);
         }
 
     }

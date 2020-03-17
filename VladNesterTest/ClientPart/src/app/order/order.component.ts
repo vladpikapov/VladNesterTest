@@ -11,13 +11,23 @@ import * as XLSX from 'xlsx';
 export class OrderComponent implements OnInit {
   Orders: Orders[];
   EditOrderId;
-  fileName = 'Orders.xlsx';
+  fileName = 'Orders.csv';
+  options = {
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalseparator: '.',
+    headers: ['1', '2', '3'],
+    showTitle: true,
+    useBom: true,
+    removeNewLines: false,
+    keys: []
+  };
 
   constructor(private service: OrderService, private formBuilder: FormBuilder) {
   }
 
   ngOnInit(): void {
-    this.service.GetOrders().subscribe(res => this.Orders = res as Orders[], error => console.log(error));
+    this.service.GetOrders().subscribe(res => this.Orders = res as Orders[]);
   }
 
   changeStatus(order: Orders) {
@@ -27,18 +37,13 @@ export class OrderComponent implements OnInit {
   }
 
   saveOrderStatus(order: Orders) {
-    console.log(order.orderStatus);
     // tslint:disable-next-line:max-line-length
     this.service.updateOrder(order).subscribe(_ => this.service.GetOrders().subscribe(res => this.Orders = res as Orders[]));
     this.EditOrderId = null;
   }
 
   exportExcel(): void {
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.Orders);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, this.fileName);
-    console.log(this.Orders);
+
   }
 }
 

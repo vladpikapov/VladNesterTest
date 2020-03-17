@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "~9.0.5",
     "@angular/router": "~9.0.5",
     "angular": "^1.7.9",
+    "angular2-csv": "^0.2.9",
     "bootstrap": "^4.4.1",
     "file-saver": "^2.0.2",
     "node-sass": "^4.13.1",

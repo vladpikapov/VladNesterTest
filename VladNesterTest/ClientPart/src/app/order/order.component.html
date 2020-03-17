@@ -1,95 +1,98 @@
 <div class="row mt-5">
   <div class="col-11">
-  <table class="table table-dark" >
-    <tr>
-      <th>№</th>
-      <th>Customer</th>
-      <th>Order status</th>
-      <th>Start date</th>
-      <th>Date of receiving</th>
-      <th align="center">
-        <div class="">
-        <ul  class="list-group list-group-horizontal list-group-flush" style="list-style: none">
-          <li class="list-group-item bg-dark mr-5" >
-            Name
-          </li>
-          <li class="list-group-item bg-dark mr-4" >
-            Country
-          </li>
-          <li class="list-group-item bg-dark mr-4" >
-            Type
-          </li>
-          <li class="list-group-item bg-dark" >
-            Count
-          </li>
-        </ul>
-      </div></th>
-    </tr>
-    <tr *ngFor="let order of Orders">
-      <td>
-        {{order.id}}
-      </td>
-      <td>
-        {{order.ordererName}}
-      </td>
-      <td *ngIf="EditOrderId === order.id">
-        <label>
-          <select [(ngModel)]="order.orderStatus" class="custom-control custom-select custom-select-sm">
-            <option>
-              Formation
-            </option>
-            <option>
-              Waiting for delivery
-            </option>
-            <option>
-              Delivered
-            </option>
-          </select>
-        </label>
-      </td>
-      <td *ngIf="EditOrderId !== order.id" (dblclick)="changeStatus(order)">
-        {{order.orderStatus}}
-      </td>
-      <td>
-        {{order.startDate |date:"dd.MM.yyyy"}}
-      </td>
-      <td *ngIf="order.endDate === null">
-        not received...
-      </td>
-      <td *ngIf="order.endDate != null">
-        {{order.endDate|date:"dd.MM.yyyy"}}
-      </td>
-      <td align="center">
-      <div>
-        <ul  *ngFor="let product of order.orderedProducts" class="align-content-center list-group list-group-horizontal list-group-flush" style="list-style: none">
-            <li class="list-group-item bg-dark mr-5">
-              {{product.product.name}}
-            </li>
-            <li class="list-group-item bg-dark mr-5">
-              {{product.product.country}}
-            </li>
-            <li class="list-group-item bg-dark mr-5">
-              {{product.product.type}}
-            </li>
-            <li class="list-group-item bg-dark mr-5">
-              {{product.countProduct}}
-            </li>
-        </ul>
-      </div>
-      </td>
-      <td *ngIf="EditOrderId === order.id">
-        <button class="btn btn-success" (click)="saveOrderStatus(order)">Save</button>
-      </td>
-    </tr>
-  </table>
-</div>
+    <table class="table table-active table-dark">
+      <tr>
+        <th>№</th>
+        <th>Customer</th>
+        <th>Order status</th>
+        <th>Start date</th>
+        <th>Date of receiving</th>
+        <th align="center">
+          <div class="">
+            <ul class="list-group list-group-horizontal list-group-flush" style="list-style: none">
+              <li class="list-group-item bg-dark mr-5">
+                Name
+              </li>
+              <li class="list-group-item bg-dark mr-4">
+                Country
+              </li>
+              <li class="list-group-item bg-dark mr-4">
+                Type
+              </li>
+              <li class="list-group-item bg-dark mr-5">
+                Count
+              </li>
+            </ul>
+          </div>
+        </th>
+      </tr>
+      <tr *ngFor="let order of Orders">
+        <td>
+          {{order.id}}
+        </td>
+        <td>
+          {{order.ordererName}}
+        </td>
+        <td *ngIf="EditOrderId === order.id">
+          <label>
+            <select [(ngModel)]="order.orderStatus" class="custom-control custom-select custom-select-sm">
+              <option>
+                Formation
+              </option>
+              <option>
+                Waiting for delivery
+              </option>
+              <option>
+                Delivered
+              </option>
+            </select>
+          </label>
+        </td>
+        <td *ngIf="EditOrderId !== order.id" (dblclick)="changeStatus(order)">
+          {{order.orderStatus}}
+        </td>
+        <td>
+          {{order.startDate |date:"dd.MM.yyyy"}}
+        </td>
+        <td *ngIf="order.endDate === null">
+          not received...
+        </td>
+        <td *ngIf="order.endDate != null">
+          {{order.endDate|date:"dd.MM.yyyy"}}
+        </td>
+        <td align="center">
+          <div>
+            <ul *ngFor="let product of order.orderedProducts"
+                class="align-content-center list-group list-group-horizontal list-group-flush" style="list-style: none">
+              <li class="list-group-item bg-dark mr-5">
+                {{product.product.name}}
+              </li>
+              <li class="list-group-item bg-dark mr-5">
+                {{product.product.country}}
+              </li>
+              <li class="list-group-item bg-dark mr-5 ">
+                {{product.product.type}}
+              </li>
+              <li class="list-group-item bg-dark mr-5">
+                {{product.countProduct}}
+              </li>
+            </ul>
+          </div>
+        </td>
+        <td *ngIf="EditOrderId === order.id">
+          <button class="btn btn-success" (click)="saveOrderStatus(order)">Save</button>
+        </td>
+      </tr>
+    </table>
+  </div>
   <div class="col-1">
-  <button type="button" routerLink="/add-order" class="btn btn-dark">
-    Add order
-  </button>
+    <button type="button" routerLink="/add-order" class="btn btn-dark">
+      Add order
+    </button>
   </div>
 </div>
-<div>
-  <button class="btn btn-success" (click)="exportExcel()">EXPORT TO EXCEL</button>
-</div>
+<!--<div>-->
+<!--  <button class="btn btn-success" (click)="exportExcel()">EXPORT TO EXCEL</button>-->
+<!--  <angular2csv [data]="Orders" [filename]="fileName" [options]="options">EXPORT</angular2csv>-->
+<!--</div>-->
 

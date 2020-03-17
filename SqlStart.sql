@@ -8,7 +8,7 @@ create table PRODUCTS
 (
 	Id int identity(1,1) primary key,
 	ProductName nvarchar(200) not null,
-	ProductType nvarchar(20) check(ProductType IN('Food','Clothes','Household chemicals')),
+	ProductType nvarchar(20) check(ProductType IN('Food','Clothes','Tech')),
 	Country nvarchar(50) check(Country IN('Germany','Belarus','Russia','USA','UK','Egypt','Spain','Poland')),
 	ProductCount int,
 	constraint uniqueConstr unique nonclustered
@@ -47,6 +47,7 @@ insert into ORDERSPRODUCTS values(1,1);
 --selects
 select * from PRODUCTS;
 select * from ORDERS;
+select * from ORDERSPRODUCTS;
 
 select o.Id,o.Orderer,o.OrderStatus,o.StartDate,o.EndDate,count(p.ProductName)  as ProductCount from ORDERS o inner join ORDERSPRODUCTS op
 on o.Id = op.OrdersFK inner join PRODUCTS p on op.ProductFK = p.Id

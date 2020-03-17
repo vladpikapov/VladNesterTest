@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Products, ProductService} from '../shared/product.service';
 import {FormBuilder, FormControl, Validators} from '@angular/forms';
@@ -15,11 +15,12 @@ export class ProductComponent implements OnInit {
   addForm;
   fileName = 'Products.xlsx';
   Products: Products[];
+
   constructor(private service: ProductService, private formBuilder: FormBuilder) {
     this.addForm = this.formBuilder.group({
-      name:  new FormControl('', Validators.required),
-      type:  new FormControl('', Validators.required),
-      country:  new FormControl('', Validators.required),
+      name: new FormControl('', Validators.required),
+      type: new FormControl('', Validators.required),
+      country: new FormControl('', Validators.required),
       count: 1
     });
   }

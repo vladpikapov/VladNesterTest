@@ -1,38 +1,66 @@
 <div class="row mt-5">
   <div class="col-8">
-  <table class="table table-dark">
-    <tr>
-      <th>№</th>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Country</th>
-      <th>Count</th>
-    </tr>
-    <tr *ngFor="let product of products;let ind = index" (click)="SelectProduct(product)" (dblclick)="SetNullSelectProduct()" [ngClass]="{'bg-light text-dark':selectProductRowId === product.id}">
-      <td>{{ind + 1}}</td>
-      <td>{{product.name}}</td>
-      <td>{{product.type}}</td>
-      <td>{{product.country}}</td>
-      <td>{{product.count}}</td>
-      <td *ngIf="selectProductRowId === product.id">
-        <label class="mr-5">
-          <input type="range" max="{{product.count}}" value="1" (input)="checkCountProduct($event)" [(ngModel)]="countProduct"  min="1" class="custom-control">
-        </label>
-        <label class="w-25" >
-          {{countProduct}}
-        </label>
-      </td>
-      <td *ngIf="selectProductRowId === product.id">
-        <button class="btn btn-outline-dark" (click)="addProductInOrder(product)" >Add</button>
-      </td>
-    </tr>
-  </table>
+    <table class="table table-active table-dark">
+      <tr>
+        <th>№</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Country</th>
+        <th>Count</th>
+      </tr>
+      <tr *ngFor="let product of products;let ind = index" (click)="SelectProduct(product)"
+          (dblclick)="SetNullSelectProduct()" [ngClass]="{'bg-light text-dark':selectProductRowId === product.id}">
+        <td>{{ind + 1}}</td>
+        <td>{{product.name}}</td>
+        <td>{{product.type}}</td>
+        <td>{{product.country}}</td>
+        <td>{{product.count}}</td>
+        <!--      <td *ngIf="selectProductRowId === product.id && isAll">-->
+        <!--        <label class="mr-5">-->
+        <!--          <input type="range" max="{{product.count}}" value="1" (input)="checkCountProduct($event)" [(ngModel)]="countProduct"  min="1" class="custom-control">-->
+        <!--        </label>-->
+        <!--        <label class="w-25" >-->
+        <!--          {{countProduct}}-->
+        <!--        </label>-->
+        <!--      </td>-->
+        <td *ngIf="selectProductRowId === product.id && isAll">
+
+        </td>
+      </tr>
+    </table>
   </div>
-  <div class="col-4">
-    <label>
-      <input type="text" class="custom-control" [(ngModel)]="order.ordererName">
-      <input type="date" class="custom-control" [(ngModel)]="order.startDate" [max]="date">
+  <div>
+    <button class="btn btn-dark" (click)="addProductInOrder()" [disabled]="selectProductRowId === null">Add product
+    </button>
+    <br>
+    <br>
+    <label class="mr-5">
+      <input type="range" max="{{productOr.count}}" value="1" (input)="checkCountProduct($event)"
+             [(ngModel)]="countProduct" min="1" class="custom-control">
     </label>
-    <button (click)="AddOrder()" [disabled]="order.orderedProducts.length === 0" class="btn btn-dark">Add</button>
+    <br>
+    <label>
+      {{countProduct}}
+    </label>
+  </div>
+  <div class="w-auto">
+    <h4>Customer</h4>
+    <div>
+      <label>
+        <input type="text" class="custom-control" [(ngModel)]="order.ordererName">
+      </label>
+    </div>
+    <h4>Date</h4>
+    <div>
+      <label>
+        <input type="date" class="custom-control" [(ngModel)]="order.startDate" [max]="date">
+      </label>
+    </div>
+    <br>
+    <button (click)="AddOrder()"
+            [disabled]="order.orderedProducts.length === 0 || order.ordererName === '' || order.startDate === undefined"
+            class="btn btn-dark">Add order
+    </button>
+
   </div>
 </div>
