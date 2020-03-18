@@ -48,7 +48,7 @@
             </select>
           </label>
         </td>
-        <td *ngIf="EditOrderId !== order.id" (dblclick)="changeStatus(order)">
+        <td (dblclick)="changeStatus(order)" *ngIf="EditOrderId !== order.id">
           {{order.orderStatus}}
         </td>
         <td>
@@ -80,19 +80,20 @@
           </div>
         </td>
         <td *ngIf="EditOrderId === order.id">
-          <button class="btn btn-success" (click)="saveOrderStatus(order)">Save</button>
+          <button (click)="saveOrderStatus(order)" class="btn btn-success">Save</button>
         </td>
       </tr>
     </table>
   </div>
   <div class="col-1">
-    <button type="button" routerLink="/add-order" class="btn btn-dark">
+    <button class="btn btn-dark" routerLink="/add-order" type="button">
       Add order
     </button>
+
   </div>
 </div>
 <!--<div>-->
-<!--  <button class="btn btn-success" (click)="exportExcel()">EXPORT TO EXCEL</button>-->
-<!--  <angular2csv [data]="Orders" [filename]="fileName" [options]="options">EXPORT</angular2csv>-->
+<button (click)="exportExcel()" class="btn btn-success">EXPORT TO EXCEL</button>
+<!--  <angular2csv [data]="ExportOrders" [filename]="fileName" [options]="options">EXPORT</angular2csv>-->
 <!--</div>-->
 

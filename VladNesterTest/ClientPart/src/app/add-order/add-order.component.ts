@@ -14,6 +14,7 @@ export class AddOrderComponent implements OnInit {
   productOr: Products = new Products();
   orderedProduct: OrderedProduct = new OrderedProduct();
   selectProductRowId = null;
+  thisOrderedProducts: OrderedProduct[] = [];
   isAll = false;
   date = formatDate(new Date(), 'yyyy-MM-dd', 'en');
   countProduct = 1;
@@ -26,8 +27,11 @@ export class AddOrderComponent implements OnInit {
   }
 
   SelectProduct(product: Products) {
-    this.selectProductRowId = product.id;
-    this.productOr = product;
+    if (this.order.orderedProducts.length === 0) {
+      this.selectProductRowId = product.id;
+      this.productOr = product;
+    }
+
   }
 
   checkCountProduct(event) {
@@ -43,6 +47,7 @@ export class AddOrderComponent implements OnInit {
     this.orderedProduct.product = this.productOr;
     this.orderedProduct.countProduct = this.countProduct;
     this.order.orderedProducts.push(this.orderedProduct);
+    this.thisOrderedProducts.push(this.orderedProduct);
     this.selectProductRowId = null;
     this.isAll = !this.isAll;
   }
@@ -52,5 +57,10 @@ export class AddOrderComponent implements OnInit {
     this.orderService.postOrder(this.order).subscribe(_ => this.productService.getProducts().subscribe(res => this.products = res as Products[]));
     this.order.orderedProducts = [];
     this.isAll = !this.isAll;
+  }
+
+  removeProductFromOrder() {
+    this.order.orderedProducts.pop();
+    this.thisOrderedProducts.pop();
   }
 }

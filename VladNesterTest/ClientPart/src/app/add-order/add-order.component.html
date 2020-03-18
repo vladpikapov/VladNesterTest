@@ -8,8 +8,9 @@
         <th>Country</th>
         <th>Count</th>
       </tr>
-      <tr *ngFor="let product of products;let ind = index" (click)="SelectProduct(product)"
-          (dblclick)="SetNullSelectProduct()" [ngClass]="{'bg-light text-dark':selectProductRowId === product.id}">
+      <tr (click)="SelectProduct(product)" (dblclick)="SetNullSelectProduct()"
+          *ngFor="let product of products;let ind = index"
+          [ngClass]="{'bg-light text-dark':selectProductRowId === product.id}">
         <td>{{ind + 1}}</td>
         <td>{{product.name}}</td>
         <td>{{product.type}}</td>
@@ -29,14 +30,18 @@
       </tr>
     </table>
   </div>
-  <div>
-    <button class="btn btn-dark" (click)="addProductInOrder()" [disabled]="selectProductRowId === null">Add product
+  <div class="mr-5">
+    <button (click)="addProductInOrder()" [disabled]="selectProductRowId === null" class="btn btn-dark">Add product
+    </button>
+    <button (click)="removeProductFromOrder()" class="btn btn-danger" [disabled]="order.orderedProducts.length === 0">
+      Cancel
     </button>
     <br>
     <br>
     <label class="mr-5">
-      <input type="range" max="{{productOr.count}}" value="1" (input)="checkCountProduct($event)"
-             [(ngModel)]="countProduct" min="1" class="custom-control">
+      <input (input)="checkCountProduct($event)" [(ngModel)]="countProduct" class="custom-control"
+             max="{{productOr.count}}"
+             min="1" type="range" value="1">
     </label>
     <br>
     <label>
@@ -47,13 +52,13 @@
     <h4>Customer</h4>
     <div>
       <label>
-        <input type="text" class="custom-control" [(ngModel)]="order.ordererName">
+        <input [(ngModel)]="order.ordererName" class="custom-control" type="text">
       </label>
     </div>
     <h4>Date</h4>
     <div>
       <label>
-        <input type="date" class="custom-control" [(ngModel)]="order.startDate" [max]="date">
+        <input [(ngModel)]="order.startDate" [max]="date" class="custom-control" type="date">
       </label>
     </div>
     <br>
@@ -61,6 +66,25 @@
             [disabled]="order.orderedProducts.length === 0 || order.ordererName === '' || order.startDate === undefined"
             class="btn btn-dark">Add order
     </button>
-
+    <br>
+    <br>
+    <div class="overflow-auto h-25">
+      <ul *ngFor="let orderProd of thisOrderedProducts;" class="list-group" style="list-style: none">
+        <li class="list-group-item">
+          Name:  {{orderProd.product.name}}
+        </li>
+        <li class="list-group-item">
+          Type:  {{orderProd.product.type}}
+        </li>
+        <li class="list-group-item">
+          Country: {{orderProd.product.country}}
+        </li>
+        <li class="list-group-item">
+          Count:  {{orderProd.countProduct}}
+        </li>
+        <br>
+      </ul>
+      <br>
+    </div>
   </div>
 </div>

@@ -38,7 +38,7 @@ namespace VladNesterTest.SomeLogic
             }
         }
 
-        public static List<OrderedProduct> GetOrderedProducts(int orderId, string connectionString, SqlConnection connection)
+        public static List<OrderedProduct> GetOrderedProducts(int orderId, SqlConnection connection)
         {
             List<OrderedProduct> orderedProducts = new List<OrderedProduct>();
             connection.Open();

@@ -29,7 +29,7 @@ namespace VladNesterTest.Controllers
             SqlConnection sqlConnection = new SqlConnection(ConnectionString);
             foreach (var order in orders)
             {
-                order.OrderedProducts = new List<OrderedProduct>(OrderMethods.GetOrderedProducts(order.Id, ConnectionString, sqlConnection));
+                order.OrderedProducts = new List<OrderedProduct>(OrderMethods.GetOrderedProducts(order.Id, sqlConnection));
             }
             return orders;
         }

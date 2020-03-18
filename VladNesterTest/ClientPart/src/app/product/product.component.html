@@ -25,13 +25,13 @@
           {{prod.count}}
         </td>
         <td align="center">
-          <button class="btn btn-outline-light w-50" [disabled]="prod.count === 99"
-                  (click)="AddProductOneValue(prod.id)">+
+          <button (click)="AddProductOneValue(prod.id)" [disabled]="prod.count === 99"
+                  class="btn btn-outline-light w-50">+
           </button>
         </td>
         <td align="center">
-          <button class="btn btn-outline-light w-50" [disabled]="prod.count === 0"
-                  (click)="DropProductOneValue(prod.id)">-
+          <button (click)="DropProductOneValue(prod.id)" [disabled]="prod.count === 0"
+                  class="btn btn-outline-light w-50">-
           </button>
         </td>
       </tr>
@@ -42,9 +42,9 @@
     <br>
     <h3 class="mb-1">Add product</h3>
     <br>
-    <form class="form-group" [formGroup]="addForm" (ngSubmit)="AddProduct(addForm.value)">
+    <form (ngSubmit)="AddProduct(addForm.value)" [formGroup]="addForm" class="form-group">
       <label>
-        <input placeholder="Product name..." formControlName="name" type="text" class="form-control"/>
+        <input class="form-control" formControlName="name" placeholder="Product name..." type="text"/>
       </label>
       <br>
       <label>
@@ -85,15 +85,15 @@
       </label>
       <br>
       <label>
-        <input type="range" min="1" max="99" value="1" formControlName="count" class="form-control-range"
-               (input)="ChangeCount($event)"/>
+        <input (input)="ChangeCount($event)" class="form-control-range" formControlName="count" max="99" min="1" type="range"
+               value="1"/>
         {{countValue}}
       </label>
-      <button class="btn btn-dark form-control " [disabled]="!addForm.valid" type="submit">Submit</button>
+      <button [disabled]="!addForm.valid" class="btn btn-dark form-control " type="submit">Submit</button>
     </form>
   </div>
   <div class="col-2">
-    <button class="btn btn-success" style="cursor: pointer" (click)="exportExcel()">
+    <button (click)="exportExcel()" class="btn btn-success" style="cursor: pointer">
       export to excel
     </button>
   </div>
