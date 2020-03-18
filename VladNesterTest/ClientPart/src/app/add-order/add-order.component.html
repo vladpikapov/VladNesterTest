@@ -8,7 +8,7 @@
         <th>Country</th>
         <th>Count</th>
       </tr>
-      <tr (click)="SelectProduct(product)" (dblclick)="SetNullSelectProduct()"
+      <tr (click)="selectProduct(product)" (dblclick)="setNullSelectProduct()"
           *ngFor="let product of products;let ind = index"
           [ngClass]="{'bg-light text-dark':selectProductRowId === product.id}">
         <td>{{ind + 1}}</td>
@@ -16,14 +16,6 @@
         <td>{{product.type}}</td>
         <td>{{product.country}}</td>
         <td>{{product.count}}</td>
-        <!--      <td *ngIf="selectProductRowId === product.id && isAll">-->
-        <!--        <label class="mr-5">-->
-        <!--          <input type="range" max="{{product.count}}" value="1" (input)="checkCountProduct($event)" [(ngModel)]="countProduct"  min="1" class="custom-control">-->
-        <!--        </label>-->
-        <!--        <label class="w-25" >-->
-        <!--          {{countProduct}}-->
-        <!--        </label>-->
-        <!--      </td>-->
         <td *ngIf="selectProductRowId === product.id && isAll">
 
         </td>
@@ -33,13 +25,14 @@
   <div class="mr-5">
     <button (click)="addProductInOrder()" [disabled]="selectProductRowId === null" class="btn btn-dark">Add product
     </button>
-    <button (click)="removeProductFromOrder()" class="btn btn-danger" [disabled]="order.orderedProducts.length === 0">
+    <button (click)="removeProductFromOrder()" [disabled]="order.orderedProducts.length === 0" class="btn btn-danger">
       Cancel
     </button>
     <br>
     <br>
     <label class="mr-5">
-      <input (input)="checkCountProduct($event)" [(ngModel)]="countProduct" class="custom-control"
+      <input (input)="checkCountProduct($event)" [(ngModel)]="countProduct" [disabled]="selectProductRowId === null"
+             class="custom-control"
              max="{{productOr.count}}"
              min="1" type="range" value="1">
     </label>
@@ -62,14 +55,14 @@
       </label>
     </div>
     <br>
-    <button (click)="AddOrder()"
+    <button (click)="addOrder()"
             [disabled]="order.orderedProducts.length === 0 || order.ordererName === '' || order.startDate === undefined"
             class="btn btn-dark">Add order
     </button>
     <br>
     <br>
-    <div class="overflow-auto h-25">
-      <ul *ngFor="let orderProd of thisOrderedProducts;" class="list-group" style="list-style: none">
+    <div class="overflow-auto h-50">
+      <ul *ngFor="let orderProd of this.thisOrderedProducts;" class="list-group" style="list-style: none">
         <li class="list-group-item">
           Name:  {{orderProd.product.name}}
         </li>

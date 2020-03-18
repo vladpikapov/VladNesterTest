@@ -23,7 +23,11 @@ create table ORDERS
 	Orderer nvarchar(100),
 	OrderStatus nvarchar(20) check(OrderStatus IN('Formation','Waiting for delivery','Delivered')),
 	StartDate date not null,
-	EndDate date
+	EndDate date,
+	constraint uniqueConstrOrder unique nonclustered
+	(
+		Orderer, StartDate
+	)
 );
 
 create table ORDERSPRODUCTS
@@ -133,8 +137,6 @@ create procedure AddOrder
 	@IdProd int
 	as
 	begin
-	if((select EndDate from ORDERS where Orderer = @Name AND StartDate = @StartDate) = null)
-	begin
 		if((select ProductCount from PRODUCTS where Id = @IdProd) >= @ProdCount)
 		begin
 			if((select count(*) from ORDERS where Orderer = @Name AND StartDate = @StartDate) != 1)
@@ -153,7 +155,6 @@ create procedure AddOrder
 					update PRODUCTS set ProductCount = ProductCount - @ProdCount where Id = @IdProd;
 				end
 				end
-		end
 		end;
 	go
 
@@ -193,7 +194,7 @@ drop table PRODUCTS;
 drop procedure SelectOrderProducts;
 drop procedure AddProduct;
 drop procedure ChangeStatus;
-drop procedure AddOrder
+drop procedure AddOrder;
 drop procedure DropOneProduct;
 drop procedure SelectProducts;
 

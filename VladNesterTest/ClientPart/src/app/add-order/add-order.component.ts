@@ -26,7 +26,7 @@ export class AddOrderComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  SelectProduct(product: Products) {
+  selectProduct(product: Products) {
     if (this.order.orderedProducts.length === 0) {
       this.selectProductRowId = product.id;
       this.productOr = product;
@@ -38,7 +38,7 @@ export class AddOrderComponent implements OnInit {
     this.countProduct = event.target.value;
   }
 
-  SetNullSelectProduct() {
+  setNullSelectProduct() {
     this.selectProductRowId = null;
   }
 
@@ -47,20 +47,19 @@ export class AddOrderComponent implements OnInit {
     this.orderedProduct.product = this.productOr;
     this.orderedProduct.countProduct = this.countProduct;
     this.order.orderedProducts.push(this.orderedProduct);
-    this.thisOrderedProducts.push(this.orderedProduct);
     this.selectProductRowId = null;
     this.isAll = !this.isAll;
   }
 
-  AddOrder() {
+  addOrder() {
     // tslint:disable-next-line:max-line-length
     this.orderService.postOrder(this.order).subscribe(_ => this.productService.getProducts().subscribe(res => this.products = res as Products[]));
-    this.order.orderedProducts = [];
+    this.thisOrderedProducts.push(this.order.orderedProducts.pop());
+    this.orderedProduct = new OrderedProduct();
     this.isAll = !this.isAll;
   }
 
   removeProductFromOrder() {
     this.order.orderedProducts.pop();
-    this.thisOrderedProducts.pop();
   }
 }
