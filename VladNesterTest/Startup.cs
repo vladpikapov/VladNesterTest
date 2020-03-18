@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace VladNesterTest
 {
@@ -25,13 +21,15 @@ namespace VladNesterTest
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IDbConnection>(db => new SqlConnection(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddControllers();
 
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientPart/dist";
             });
-            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +44,7 @@ namespace VladNesterTest
             {
                 app.UseSpaStaticFiles();
             }
+
 
             app.UseRouting();
 
@@ -63,7 +62,7 @@ namespace VladNesterTest
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
-            
+
         }
     }
 }

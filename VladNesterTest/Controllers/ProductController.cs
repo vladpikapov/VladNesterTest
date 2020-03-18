@@ -1,11 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using VladNesterTest.Models;
 using VladNesterTest.SomeLogic;
 
@@ -30,22 +26,29 @@ namespace VladNesterTest.Controllers
                 SqlCommand command = new SqlCommand("SelectProducts", connection);
                 command.CommandType = System.Data.CommandType.StoredProcedure;
                 SqlDataReader reader = command.ExecuteReader();
-                if (reader.HasRows)
+                try
                 {
-                    while (reader.Read())
+                    if (reader.HasRows)
                     {
-                        products.Add(new Product
+                        while (reader.Read())
                         {
-                            Id = reader.GetInt32(0),
-                            Name = reader.GetString(1),
-                            Type = reader.GetString(2),
-                            Country = reader.GetString(3),
-                            Count = reader.GetInt32(4)
-                        });
+                            products.Add(new Product
+                            {
+                                Id = reader.GetInt32(0),
+                                Name = reader.GetString(1),
+                                Type = reader.GetString(2),
+                                Country = reader.GetString(3),
+                                Count = reader.GetInt32(4)
+                            });
 
+                        }
                     }
                 }
-                reader.Close();
+                finally
+                {
+                    reader.Close();
+                    connection.Close();
+                }
             }
             return products;
         }

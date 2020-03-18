@@ -75,14 +75,7 @@ create procedure AddProduct
 	@Count int
 	as
 	begin
-		if((select count(*) from PRODUCTS where ProductName = @Name and ProductType = @Type and Country = @Country) = 1)
-		begin
-		update PRODUCTS set ProductCount += @Count where ProductName = @Name and ProductType = @Type and Country = @Country;
-		end
-		else
-		begin
 		insert into PRODUCTS(ProductName, ProductType, Country, ProductCount) values (@Name, @Type, @Country, @Count);
-		end
 	end;
 go
 

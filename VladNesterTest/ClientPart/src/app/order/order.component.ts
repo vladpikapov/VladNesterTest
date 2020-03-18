@@ -14,16 +14,7 @@ export class OrderComponent implements OnInit {
   ExportOrders: OrderExport[] = [];
   EditOrderId;
   fileName = 'Orders.xlsx';
-  options = {
-    fieldSeparator: ',',
-    quoteStrings: '"',
-    decimalseparator: '.',
-    headers: ['1', '2', '3'],
-    showTitle: true,
-    useBom: true,
-    removeNewLines: false,
-    keys: []
-  };
+
 
   constructor(private service: OrderService, private formBuilder: FormBuilder) {
   }

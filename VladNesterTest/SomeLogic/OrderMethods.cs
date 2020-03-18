@@ -1,25 +1,29 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
 using VladNesterTest.Models;
 
 namespace VladNesterTest.SomeLogic
 {
     public class OrderMethods
     {
-        public static List<Order> TakeOrders(string connectionString)
+        public OrderMethods()
+        {
+        }
+
+        public static List<Order> TakeOrders(SqlConnection connection)
         {
             List<Order> orders = new List<Order>();
-            using (SqlConnection sql = new SqlConnection(connectionString))
+            connection.Open();
+            SqlCommand command = new SqlCommand("select * from ORDERS", connection);
+            SqlDataReader reader = command.ExecuteReader();
+            if (reader.HasRows)
             {
-                sql.Open();
-                SqlCommand command = new SqlCommand("select * from ORDERS", sql);
-                SqlDataReader reader = command.ExecuteReader();
-                if (reader.HasRows)
+                try
                 {
+
                     while (reader.Read())
                     {
                         orders.Add(new Order
@@ -30,46 +34,84 @@ namespace VladNesterTest.SomeLogic
                             StartDate = reader.GetDateTime(3),
                             EndDate = reader.IsDBNull(4) ? null : (DateTime?)reader.GetDateTime(4)
                         });
-
                     }
-                    reader.Close();
                 }
-                return orders;
+                finally
+                {
+                    reader.Close();
+                    connection.Close();
+                }
             }
+            return orders;
+
         }
 
         public static List<OrderedProduct> GetOrderedProducts(int orderId, SqlConnection connection)
         {
             List<OrderedProduct> orderedProducts = new List<OrderedProduct>();
-            connection.Open();
-            SqlCommand command = new SqlCommand("SelectOrderProducts", connection);
-            command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@Id", orderId);
-            var reader = command.ExecuteReader();
-            if (reader.HasRows)
+            using (connection)
             {
-                while (reader.Read())
+                connection.Open();
+                SqlCommand command = new SqlCommand("SelectOrderProducts", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@Id", orderId);
+                var reader = command.ExecuteReader();
+                if (reader.HasRows)
                 {
-                    orderedProducts.Add(new OrderedProduct { Product = new Product { Id = reader.GetInt32(0), Name = reader.GetString(1), Type = reader.GetString(2), Country = reader.GetString(3) }, CountProduct = reader.GetInt32(4) });
+                    try
+                    {
+                        while (reader.Read())
+                        {
+                            orderedProducts.Add(new OrderedProduct { Product = new Product { Id = reader.GetInt32(0), Name = reader.GetString(1), Type = reader.GetString(2), Country = reader.GetString(3) }, CountProduct = reader.GetInt32(4) });
+                        }
+                    }
+                    finally
+                    {
+                        reader.Close();
+                        connection.Close();
+                    }
                 }
-                reader.Close();
             }
-            connection.Close();
             return orderedProducts;
         }
 
-        public static void AddProductsInOrder(SqlConnection connection , Order order, OrderedProduct product)
+        public static void AddProductsInOrder(Order order, OrderedProduct product, SqlConnection connection)
+        {
+            using (connection)
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand("AddOrder", connection);
+                try
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@Name", order.OrdererName);
+                    command.Parameters.AddWithValue("@StartDate", order.StartDate);
+                    command.Parameters.AddWithValue("@ProdCount", product.CountProduct);
+                    command.Parameters.AddWithValue("@IdProd", product.Product.Id);
+                    command.ExecuteNonQuery();
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+        public static void ChangeStatus(Order order, SqlConnection connection)
         {
             connection.Open();
-            SqlCommand command = new SqlCommand("AddOrder", connection);
-            
-            command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@Name", order.OrdererName);
-            command.Parameters.AddWithValue("@StartDate", order.StartDate);
-            command.Parameters.AddWithValue("@ProdCount", product.CountProduct);
-            command.Parameters.AddWithValue("@IdProd", product.Product.Id);
-            command.ExecuteNonQuery();
-            connection.Close();
+            SqlCommand command = new SqlCommand("ChangeStatus", connection);
+            try
+            {
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@Id", order.Id);
+                command.Parameters.AddWithValue("@Status", order.OrderStatus);
+                command.ExecuteNonQuery();
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
     }
 }
