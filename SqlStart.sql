@@ -17,8 +17,6 @@ create table PRODUCTS
 	)
 );
 
-select * from ORDERSPRODUCTS;
-
 create table ORDERS
 (
 	Id int identity(1,1) primary key,
@@ -73,7 +71,14 @@ create procedure AddProduct
 	@Count int
 	as
 	begin
-	insert into PRODUCTS(ProductName, ProductType, Country, ProductCount) values (@Name, @Type, @Country, @Count);
+		if((select count(*) from PRODUCTS where ProductName = @Name and ProductType = @Type and Country = @Country) = 1)
+		begin
+		update PRODUCTS set ProductCount += @Count where ProductName = @Name and ProductType = @Type and Country = @Country;
+		end
+		else
+		begin
+		insert into PRODUCTS(ProductName, ProductType, Country, ProductCount) values (@Name, @Type, @Country, @Count);
+		end
 	end;
 go
 
@@ -128,6 +133,8 @@ create procedure AddOrder
 	@IdProd int
 	as
 	begin
+	if((select EndDate from ORDERS where Orderer = @Name AND StartDate = @StartDate) = null)
+	begin
 		if((select ProductCount from PRODUCTS where Id = @IdProd) >= @ProdCount)
 		begin
 			if((select count(*) from ORDERS where Orderer = @Name AND StartDate = @StartDate) != 1)
@@ -146,6 +153,7 @@ create procedure AddOrder
 					update PRODUCTS set ProductCount = ProductCount - @ProdCount where Id = @IdProd;
 				end
 				end
+		end
 		end;
 	go
 
