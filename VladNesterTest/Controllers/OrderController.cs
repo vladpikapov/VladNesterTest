@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using VladNesterTest.Models;
 using VladNesterTest.SomeLogic;
 
@@ -35,31 +36,44 @@ namespace VladNesterTest.Controllers
         [HttpPost]
         public void PostOrder(Order order)
         {
-            if (order.OrdererName.Length <= 100)
+            OrderedProduct orderedProduct = order.OrderedProducts.FirstOrDefault();
+            if (orderedProduct.Product.Count >= orderedProduct.CountProduct)
             {
-                int? orderId = OrderMethods.GetOrderId(order, Connection);
-                if (orderId == null)
-                    OrderMethods.CreateOrder(order, Connection);
-                OrderedProduct product = order.OrderedProducts.FirstOrDefault();
-                orderId = OrderMethods.GetOrderId(order, Connection);
-                OrderMethods.AddProductsInOrder(orderId, product, Connection);
-                ProductMethods.UpdateProduct(Connection, $"update PRODUCTS set ProductCount -= {product.CountProduct} where Id = {product.Product.Id};");
+                if (order.OrdererName.Length <= 100)
+                {
+                    var orderFromList = OrderMethods.GetOrder(order, Connection);
+                    if (orderFromList == null)
+                        OrderMethods.CreateOrder(order, Connection);
+                    orderFromList = OrderMethods.GetOrder(order, Connection);
+                    if (OrderMethods.CheckProductInOrder(orderFromList.Id, orderedProduct.Product.Id, Connection))
+                    {
+                        OrderMethods.UpdateOrder(orderFromList.Id, orderedProduct.Product.Id, orderedProduct.CountProduct, Connection);
+                    }
+                    else
+                    {
+                        OrderMethods.AddProductsInOrder(orderFromList.Id, orderedProduct, Connection);
+                    }
+                    ProductMethods.UpdateProduct(Connection, $"update PRODUCTS set ProductCount -= {orderedProduct.CountProduct} where Id = {orderedProduct.Product.Id};");
+
+                }
             }
         }
 
         [HttpPut]
         public void ChangeStatus(Order order)
         {
-
-            if (order.OrderStatus.Equals("Delivered"))
+            StringBuilder sqlCmd = new StringBuilder(); 
+            if (order.OrderStatus == "Delivered")
             {
                 order.EndDate = DateTime.Now;
+                sqlCmd.Append($"update ORDERS set OrderStatus = '{order.OrderStatus}', EndDate = '{order.EndDate}' where Id = {order.Id};");
             }
             else
             {
                 order.EndDate = null;
+                sqlCmd.Append($"update ORDERS set OrderStatus = '{order.OrderStatus}' where Id = {order.Id};");
             }
-            OrderMethods.ChangeStatus(order, Connection);
+            OrderMethods.ChangeStatus(order, Connection, sqlCmd.ToString());
 
         }
     }

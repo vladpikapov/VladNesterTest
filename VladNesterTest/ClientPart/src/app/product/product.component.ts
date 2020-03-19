@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {Products, ProductService} from '../shared/product.service';
+import {ProductService} from '../shared/product.service';
 import {FormBuilder, FormControl, Validators} from '@angular/forms';
 import * as XLSX from 'xlsx';
+import { Products } from '../shared/Models/AllModels';
 
 @Component({
   selector: 'app-product',

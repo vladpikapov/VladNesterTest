@@ -59,7 +59,6 @@ namespace VladNesterTest.SomeLogic
             {
                 connection.Open();
                 SqlCommand command = new SqlCommand("SELECT * FROM PRODUCTS", connection);
-                command.CommandType = System.Data.CommandType.StoredProcedure;
                 SqlDataReader reader = command.ExecuteReader();
                 try
                 {
@@ -88,12 +87,12 @@ namespace VladNesterTest.SomeLogic
             return products;
         }
 
-        public static int? GetProductId(Product product, string connectionString)
+        public static Product GetProductById(Product product, string connectionString)
         {
             List<Product> products = new List<Product>(GetProducts(connectionString));
             if (product.Count == 0)
                 return null;
-            return products.Where(p => p.Name == product.Name && p.Type == product.Type && p.Country == product.Country).FirstOrDefault().Id;
+            return products.Where(p => p.Name == product.Name && p.Type == product.Type && p.Country == product.Country).FirstOrDefault();
         }
     }
 }

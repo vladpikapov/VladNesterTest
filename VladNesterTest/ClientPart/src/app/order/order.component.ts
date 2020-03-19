@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {Orders, OrderService} from '../shared/OrderService/order.service';
-import {FormBuilder} from '@angular/forms';
 import * as XLSX from 'xlsx';
+import {OrderService} from '../shared/OrderService/order.service';
+import {OrderExport, Orders} from '../shared/Models/AllModels';
 
 @Component({
   selector: 'app-order',
@@ -16,7 +16,7 @@ export class OrderComponent implements OnInit {
   fileName = 'Orders.xlsx';
 
 
-  constructor(private service: OrderService, private formBuilder: FormBuilder) {
+  constructor(private service: OrderService) {
   }
 
   ngOnInit(): void {
@@ -61,11 +61,13 @@ export class OrderComponent implements OnInit {
         if (j + 1 !== this.Orders[i].orderedProducts.length) {
           this.ExportOrder.idProduct += this.Orders[i].orderedProducts[j].product.id.toString() + ', ';
           this.ExportOrder.countProduct += this.Orders[i].orderedProducts[j].countProduct.toString() + ', ';
-
+          this.ExportOrder.productName += this.Orders[i].orderedProducts[j].product.name + ',';
+          this.ExportOrder.productType += this.Orders[i].orderedProducts[j].product.type + ',';
         } else {
           this.ExportOrder.idProduct += this.Orders[i].orderedProducts[j].product.id.toString();
           this.ExportOrder.countProduct += this.Orders[i].orderedProducts[j].countProduct.toString();
-
+          this.ExportOrder.productName += this.Orders[i].orderedProducts[j].product.name;
+          this.ExportOrder.productType += this.Orders[i].orderedProducts[j].product.type;
         }
       }
       this.ExportOrders.push(this.ExportOrder);
@@ -74,15 +76,4 @@ export class OrderComponent implements OnInit {
 
 }
 
-class OrderExport {
-  id: number;
-  ordererName: string;
-  orderStatus: string;
-  startDate: Date;
-  endDate: Date;
-  idProduct = '';
-  countProduct = '';
 
-  constructor() {
-  }
-}

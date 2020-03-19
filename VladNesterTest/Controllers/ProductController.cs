@@ -26,15 +26,15 @@ namespace VladNesterTest.Controllers
         [HttpPost]
         public void AddProduct(Product product)
         {
-            int? prodId = ProductMethods.GetProductId(product, ConnectionString);
-            if (prodId == null)
+            Product prodFromList = ProductMethods.GetProductById(product, ConnectionString);
+            if (prodFromList == null)
             {
                 if (product.Name.Length <= 200)
                     ProductMethods.AddProduct(product, ConnectionString);
             }
             else
             {
-                ProductMethods.UpdateProduct(ConnectionString, $"update PRODUCTS set ProductCount += {product.Count} where Id = {prodId};");
+                ProductMethods.UpdateProduct(ConnectionString, $"update PRODUCTS set ProductCount += {product.Count} where Id = {prodFromList.Id};");
             }
         }
         [HttpPut("add/{id}")]

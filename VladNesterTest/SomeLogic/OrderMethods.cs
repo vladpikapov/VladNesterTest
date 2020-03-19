@@ -64,7 +64,7 @@ namespace VladNesterTest.SomeLogic
                     {
                         while (reader.Read())
                         {
-                            orderedProducts.Add(new OrderedProduct { Product = new Product { Id = reader.GetInt32(0), Name = reader.GetString(1), 
+                            orderedProducts.Add(new OrderedProduct { Product = new Product { Id = reader.GetInt32(0), Name = reader.GetString(1),
                                 Type = reader.GetString(2), Country = reader.GetString(3) }, CountProduct = reader.GetInt32(4) });
                         }
                     }
@@ -83,7 +83,7 @@ namespace VladNesterTest.SomeLogic
             using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
             string sqlCmd = $"insert ORDERS(Orderer,OrderStatus, StartDate, EndDate) values ('{order.OrdererName}','Formation','{order.StartDate}',null)";
-            SqlCommand command = new SqlCommand(sqlCmd,connection);
+            SqlCommand command = new SqlCommand(sqlCmd, connection);
             try
             {
                 command.ExecuteNonQuery();
@@ -94,13 +94,13 @@ namespace VladNesterTest.SomeLogic
             }
         }
 
-        public static int? GetOrderId(Order order, string connectionString)
+        public static Order GetOrder(Order order, string connectionString)
         {
             List<Order> orders = new List<Order>(GetOrders(connectionString));
             if (orders.Count == 0)
                 return null;
-            return orders.Where(o => o.OrdererName == order.OrdererName && o.StartDate == order.StartDate).FirstOrDefault().Id;
-        } 
+            return orders.Where(o => o.OrdererName == order.OrdererName && o.StartDate == order.StartDate).FirstOrDefault();
+        }
 
         public static void AddProductsInOrder(int? orderId, OrderedProduct product, string connectionString)
         {
@@ -118,11 +118,10 @@ namespace VladNesterTest.SomeLogic
             }
         }
 
-        public static void ChangeStatus(Order order, string connectionString)
+        public static void ChangeStatus(Order order, string connectionString, string sqlCmd)
         {
             using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
-            string sqlCmd = $"update ORDERS set OrderStatus = '{order.OrderStatus}', EndDate = '{order.EndDate}' where Id = {order.Id};";
             SqlCommand command = new SqlCommand(sqlCmd, connection);
             try
             {
@@ -132,6 +131,54 @@ namespace VladNesterTest.SomeLogic
             {
                 connection.Close();
             }
+        }
+
+        public static bool CheckProductInOrder(int orderId, int productId, string connectionString)
+        {
+            List<OrdersProducts> ordersProducts = new List<OrdersProducts>(GetOrdersProducts(connectionString));
+            if (ordersProducts.Where(op => op.OrderId == orderId && op.ProductId == productId).Count() != 0)
+                return true;
+            return false;
+        }
+
+        public static void UpdateOrder(int orderId, int productId, int productCount, string connectionString)
+        {
+            using SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+            SqlCommand command = new SqlCommand($"update ORDERSPRODUCTS set CountOrderedProducts += {productCount} where OrdersFK = {orderId} and ProductFK = {productId};", connection);
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public static List<OrdersProducts> GetOrdersProducts(string connectionString)
+        {
+            List<OrdersProducts> ordersProducts = new List<OrdersProducts>();
+            using SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+            SqlCommand command = new SqlCommand("select * from ORDERSPRODUCTS", connection);
+            var reader = command.ExecuteReader();
+            try
+            {
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        ordersProducts.Add(new OrdersProducts { OrderId = reader.GetInt32(0), ProductId = reader.GetInt32(1), CountProduct = reader.GetInt32(2) });
+                    }
+                }
+            }
+            finally
+            {
+                reader.Close();
+                connection.Close();
+            }
+            return ordersProducts;
         }
     }
 }

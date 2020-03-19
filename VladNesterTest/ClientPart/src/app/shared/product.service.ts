@@ -1,16 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import { Products } from './Models/AllModels';
 
-export class Products {
-  id: number;
-  name: string;
-  type: string;
-  country: string;
-  count: number;
 
-  constructor() {
-  }
-}
 
 @Injectable({
   providedIn: 'root'
