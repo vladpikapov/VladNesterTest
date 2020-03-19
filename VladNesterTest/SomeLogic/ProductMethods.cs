@@ -41,9 +41,13 @@ namespace VladNesterTest.SomeLogic
         {
             using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
-            SqlCommand command = new SqlCommand($"insert into PRODUCTS(ProductName, ProductType, Country, ProductCount) values ('{product.Name}', '{product.Type}', '{product.Country}', '{product.Count}')", connection);
+            SqlCommand command = new SqlCommand($"insert into PRODUCTS(ProductName, ProductType, Country, ProductCount) values (@Name, @Type, @Country, @Count)", connection);
             try
             {
+                command.Parameters.AddWithValue("@Name", product.Name);
+                command.Parameters.AddWithValue("@Type", product.Type);
+                command.Parameters.AddWithValue("@Country", product.Country);
+                command.Parameters.AddWithValue("@Count", product.Count);
                 command.ExecuteNonQuery();
             }
             finally

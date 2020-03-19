@@ -90,10 +90,12 @@ namespace VladNesterTest.SomeLogic
         {
             using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
-            string sqlCmd = $"insert ORDERS(Orderer,OrderStatus, StartDate, EndDate) values ('{order.OrdererName}','Formation','{order.StartDate}',null)";
+            string sqlCmd = $"insert ORDERS(Orderer,OrderStatus, StartDate, EndDate) values (@Name,'Formation',@StartDate,null)";
             SqlCommand command = new SqlCommand(sqlCmd, connection);
             try
             {
+                command.Parameters.AddWithValue("@Name", order.OrdererName);
+                command.Parameters.AddWithValue("@StartDate", order.StartDate);
                 command.ExecuteNonQuery();
             }
             finally
@@ -126,7 +128,7 @@ namespace VladNesterTest.SomeLogic
             }
         }
 
-        public static void ChangeStatus(Order order, string connectionString, string sqlCmd)
+        public static void ChangeStatus(string connectionString, string sqlCmd)
         {
             using SqlConnection connection = new SqlConnection(connectionString);
             connection.Open();
