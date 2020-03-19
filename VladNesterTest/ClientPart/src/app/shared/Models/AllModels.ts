@@ -22,13 +22,13 @@ export class Products {
   constructor() {
   }
 }
+
 export class OrderExport {
-  id: number;
-  ordererName: string;
+  customerId: number;
+  customer: string;
   orderStatus: string;
   startDate: Date;
   endDate: Date;
-  idProduct = '';
   productName = '';
   productType = '';
   countProduct = '';

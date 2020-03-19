@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {formatDate} from '@angular/common';
-import { Products, Orders, OrderedProduct } from '../shared/Models/AllModels';
-import { OrderService } from '../shared/OrderService/order.service';
-import { ProductService } from '../shared/product.service';
+import {OrderedProduct, Orders, Products} from '../shared/Models/AllModels';
+import {OrderService} from '../shared/OrderService/order.service';
+import {ProductService} from '../shared/product.service';
 
 @Component({
   selector: 'app-add-order',

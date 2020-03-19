@@ -43,7 +43,7 @@ namespace VladNesterTest.Controllers
                     if (orderFromList == null)
                         OrderMethods.CreateOrder(order, Connection);
                     orderFromList = OrderMethods.GetOrder(order, Connection);
-                    if (orderFromList.EndDate != null)
+                    if (orderFromList.EndDate == null)
                     {
                         if (OrderMethods.CheckProductInOrder(orderFromList.Id, orderedProduct.Product.Id, Connection))
                         {

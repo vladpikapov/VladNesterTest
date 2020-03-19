@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +7,7 @@ import {Router} from '@angular/router';
 export class OrderService {
 
   baseUrl = document.getElementsByTagName('base')[0].href;
+
   constructor(private http: HttpClient) {
   }
 
