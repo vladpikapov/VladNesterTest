@@ -70,7 +70,6 @@ namespace VladNesterTest.Controllers
             }
             else
             {
-                order.EndDate = null;
                 sqlCmd.Append($"update ORDERS set OrderStatus = '{order.OrderStatus}' where Id = {order.Id};");
             }
             OrderMethods.ChangeStatus(order, Connection, sqlCmd.ToString());
