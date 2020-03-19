@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -64,8 +63,17 @@ namespace VladNesterTest.SomeLogic
                     {
                         while (reader.Read())
                         {
-                            orderedProducts.Add(new OrderedProduct { Product = new Product { Id = reader.GetInt32(0), Name = reader.GetString(1),
-                                Type = reader.GetString(2), Country = reader.GetString(3) }, CountProduct = reader.GetInt32(4) });
+                            orderedProducts.Add(new OrderedProduct
+                            {
+                                Product = new Product
+                                {
+                                    Id = reader.GetInt32(0),
+                                    Name = reader.GetString(1),
+                                    Type = reader.GetString(2),
+                                    Country = reader.GetString(3)
+                                },
+                                CountProduct = reader.GetInt32(4)
+                            });
                         }
                     }
                     finally

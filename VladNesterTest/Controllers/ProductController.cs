@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
 using VladNesterTest.Models;
 using VladNesterTest.SomeLogic;
 

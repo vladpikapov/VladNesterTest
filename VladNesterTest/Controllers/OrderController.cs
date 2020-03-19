@@ -2,8 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using VladNesterTest.Models;
@@ -28,7 +26,7 @@ namespace VladNesterTest.Controllers
             List<Order> orders = new List<Order>(OrderMethods.GetOrders(Connection));
             foreach (var order in orders)
             {
-                order.OrderedProducts = new List<OrderedProduct>(OrderMethods.GetOrderedProducts(order.Id,Connection));
+                order.OrderedProducts = new List<OrderedProduct>(OrderMethods.GetOrderedProducts(order.Id, Connection));
             }
             return orders;
         }
@@ -45,16 +43,18 @@ namespace VladNesterTest.Controllers
                     if (orderFromList == null)
                         OrderMethods.CreateOrder(order, Connection);
                     orderFromList = OrderMethods.GetOrder(order, Connection);
-                    if (OrderMethods.CheckProductInOrder(orderFromList.Id, orderedProduct.Product.Id, Connection))
+                    if (orderFromList.EndDate != null)
                     {
-                        OrderMethods.UpdateOrder(orderFromList.Id, orderedProduct.Product.Id, orderedProduct.CountProduct, Connection);
+                        if (OrderMethods.CheckProductInOrder(orderFromList.Id, orderedProduct.Product.Id, Connection))
+                        {
+                            OrderMethods.UpdateOrder(orderFromList.Id, orderedProduct.Product.Id, orderedProduct.CountProduct, Connection);
+                        }
+                        else
+                        {
+                            OrderMethods.AddProductsInOrder(orderFromList.Id, orderedProduct, Connection);
+                        }
+                        ProductMethods.UpdateProduct(Connection, $"update PRODUCTS set ProductCount -= {orderedProduct.CountProduct} where Id = {orderedProduct.Product.Id};");
                     }
-                    else
-                    {
-                        OrderMethods.AddProductsInOrder(orderFromList.Id, orderedProduct, Connection);
-                    }
-                    ProductMethods.UpdateProduct(Connection, $"update PRODUCTS set ProductCount -= {orderedProduct.CountProduct} where Id = {orderedProduct.Product.Id};");
-
                 }
             }
         }
@@ -62,7 +62,7 @@ namespace VladNesterTest.Controllers
         [HttpPut]
         public void ChangeStatus(Order order)
         {
-            StringBuilder sqlCmd = new StringBuilder(); 
+            StringBuilder sqlCmd = new StringBuilder();
             if (order.OrderStatus == "Delivered")
             {
                 order.EndDate = DateTime.Now;
